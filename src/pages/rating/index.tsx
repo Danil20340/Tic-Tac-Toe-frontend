@@ -1,6 +1,7 @@
 import { Cell } from '../../components/cell';
 import { Container } from '../../components/container';
 import { Row } from '../../components/row';
+import { Text } from '../../components/text';
 import './index.css'
 
 type DataRow = {
@@ -25,7 +26,7 @@ export const Rating = () => {
   ];
   return (
     <Container className="rating-players">
-      <Container style={{ fontWeight: 700, fontSize: "24px", lineHeight: '150%', justifyContent: 'start' }}>Рейтинг игроков</Container>
+      <Text style={{ fontWeight: 700, fontSize: "24px", lineHeight: '36px' }}>Рейтинг игроков</Text>
       <Container style={{ flexDirection: "column", alignItems: 'flex-start' }}>
         <Row style={{ fontWeight: "600" }}>
           <Cell style={{ width: "440px" }}>ФИО</Cell>
