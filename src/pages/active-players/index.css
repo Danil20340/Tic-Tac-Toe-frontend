@@ -1,0 +1,9 @@
+.active-players {
+    margin: 120px 0 64px 0;
+    flex-direction: column;
+    padding: 32px;
+    gap: 24px;
+    max-width: 780px;
+    box-shadow: 0 4px 20px rgba(44, 57, 121, 0.09);
+    border-radius: 40px;
+}
