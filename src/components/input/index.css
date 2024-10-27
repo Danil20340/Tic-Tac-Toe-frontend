@@ -1,0 +1,28 @@
+.defaultInput {
+    width: -webkit-fill-available;
+    max-height: 48px;
+    box-sizing: border-box;
+    padding: 12px 20px;
+    background: #FFFFFF;
+    border: 1px solid #DCDCDF;
+    border-radius: 12px;
+    font-size: 16px;
+    line-height: 24px;
+    font-style: normal;
+    font-weight: 400;
+    transition: border-color 0.3s;
+}
+
+.defaultInput:hover {
+    border-color: #60C2AA;
+}
+
+.defaultInput:focus {
+    border-color: #3BA189;
+    outline: none; 
+}
+
+.defaultInput::placeholder {
+    color: #B1B1B7;
+    letter-spacing: 0.24px;
+}

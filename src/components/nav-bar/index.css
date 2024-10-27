@@ -1,0 +1,52 @@
+header {
+    font-size: 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    gap: 10px;
+    position: fixed;
+    width: -webkit-fill-available;
+    background: #FFFFFF;
+    box-shadow: 0 2px 6px rgba(44, 57, 121, 0.1);
+    border-radius: 0 0 16px 16px;
+}
+
+header #nav-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0;
+    gap: 40px;
+}
+#signout {
+    line-height: 0;
+    color: #373745; /* Начальный цвет */
+}
+
+#signout:hover {
+    color: #3BA189; /* Цвет при наведении */
+}
+.nav-b{
+    font-weight: 500;
+    line-height: 24px;
+    border-radius: 200px;
+    padding: 4px 12px;
+
+}
+#nav-bar a.active{
+    color:#FFFFFF;
+    border-radius: 200px;
+    background: #60C2AA;
+}
+#nav-bar a.active:hover{
+    color:#FFFFFF;
+    border-radius: 200px;
+    background: #60C2AA!important;
+}
+.nav-b:hover {
+    cursor: pointer;
+    background-color: #F7F7F7;
+}
+

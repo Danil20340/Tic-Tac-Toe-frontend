@@ -1,0 +1,10 @@
+.row-dat{
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    width: -webkit-fill-available;
+    box-shadow: inset 0 -1px 0 #EEEFF5;
+    line-height: 24px;
+    letter-spacing: 0.24px;
+    text-align: center;
+}
