@@ -12,7 +12,7 @@ export const Button: React.FC<Props> = ({ backgroundColor = "#60C2AA", disabled 
 
     return (
         <button
-            style={{ backgroundColor: backgroundColor, color: color }}
+            style={{ backgroundColor: backgroundColor, color: backgroundColor === "#60C2AA" ? color : "black"  }}
             className="defaultButton"
             disabled={disabled}
             onMouseOver={(e) => {
