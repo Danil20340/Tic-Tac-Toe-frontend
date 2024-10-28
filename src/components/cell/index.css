@@ -1,8 +1,5 @@
 .cell-common{
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
     padding: 8px;
-    gap: 10px;
     width: 108px;
 }
