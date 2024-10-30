@@ -1,16 +1,20 @@
 .defaultButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
     padding: 12px 20px;
     border-radius: 12px;
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.24px;
     border: none;
-    cursor: pointer!important;
+    cursor: pointer !important;
     transition: background-color 0.3s ease;
-    outline: none; 
+    outline: none;
 }
 
 .defaultButton:disabled {
     opacity: 0.3;
-    cursor: not-allowed!important;
+    cursor: not-allowed !important;
 }

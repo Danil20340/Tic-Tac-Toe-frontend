@@ -25,7 +25,7 @@ export const ActivePlayers = () => {
   const elements = playerActive.map(item =>
     <Row style={{ boxShadow: "none", padding: "12px 0px" }}>
       <Cell style={{ width: "360px" }}>{item.FIO}</Cell>
-      {item.status === "Свободен" ? <Status isFree={true} /> : <Status />}
+      {item.status === "Свободен" ? <Status /> : <Status status='isPlay' />}
       {item.status === "Свободен" ? <Button >Позвать играть</Button> :
         <Button disabled={true} backgroundColor="#F7F7F7" >Позвать играть</Button>}
     </Row>
