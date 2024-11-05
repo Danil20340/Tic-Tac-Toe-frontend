@@ -4,6 +4,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: #F6F6F6;
 }
 
 #root {

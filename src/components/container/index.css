@@ -1,0 +1,5 @@
+.case {
+    display: flex;
+    justify-content: center;
+    width: -webkit-fill-available;
+}

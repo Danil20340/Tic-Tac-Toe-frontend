@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useRef, useEffect } from "react";
 import './index.css';
 
 type Props = {
@@ -6,13 +6,24 @@ type Props = {
     required?: boolean;
     style?: CSSProperties;
     value?: string | number;
-    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     type?: string;
 }
 
 export const Input: React.FC<Props> = ({ style, required = false, placeholder, value, onChange, type = "text" }) => {
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (type === "number") {
+    const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+    useEffect(() => {
+        if (type === 'textArea' && textAreaRef.current) {
+            if (textAreaRef.current) {
+                textAreaRef.current.style.height = 'auto';
+                textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
+            }
+        }
+    }, [value, type]);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (type === "number" && event.target instanceof HTMLInputElement) {
             const valueAsNumber = parseFloat(event.target.value);
             if (isNaN(valueAsNumber) || valueAsNumber < 0 || valueAsNumber > 100) {
                 event.target.value = '';
@@ -22,6 +33,22 @@ export const Input: React.FC<Props> = ({ style, required = false, placeholder, v
             onChange(event);
         }
     };
+
+    if (type === 'textArea') {
+        return (
+            <textarea
+                ref={textAreaRef}
+                style={style}
+                className="defaultInput"
+                required={required}
+                placeholder={placeholder}
+                value={value}
+                onChange={handleChange}
+                rows={1}
+            />
+        );
+    }
+
     return (
         <input
             style={style}

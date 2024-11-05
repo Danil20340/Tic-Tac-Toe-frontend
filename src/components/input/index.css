@@ -13,13 +13,20 @@
     transition: border-color 0.3s;
 }
 
+textarea.defaultInput {
+    max-height: none;
+    overflow-y: hidden;
+    font-family: 'Roboto', sans-serif;
+    resize: none;
+}
+
 .defaultInput:hover {
     border-color: #60C2AA;
 }
 
 .defaultInput:focus {
     border-color: #3BA189;
-    outline: none; 
+    outline: none;
 }
 
 .defaultInput::placeholder {
