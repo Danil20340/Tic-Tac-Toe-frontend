@@ -1,0 +1,16 @@
+.whose_move {
+    box-sizing: border-box;
+    max-width: 400px;
+    width: -webkit-fill-available;
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #373745;
+    box-shadow: 0 4px 20px rgb(44 57 121 / 9%);
+    border-radius: 12px;
+    font-size: 20px;
+    letter-spacing: 0.15px;
+    color: #FFFFFF;
+    gap: 10px;
+}

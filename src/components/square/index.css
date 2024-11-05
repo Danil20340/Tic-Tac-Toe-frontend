@@ -1,0 +1,13 @@
+.square{
+    width: 218.33px;
+    height: 218.33px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 20px #2c397917;
+}
+.square:hover {
+    background-color: #F7F7F7;
+}

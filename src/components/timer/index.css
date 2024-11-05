@@ -1,0 +1,16 @@
+.time {
+    text-align: center;
+    letter-spacing: 0.25px;
+    padding: 24px;
+    max-width: 139px;
+    max-height: 88px;
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    box-sizing: border-box;
+    background: #EDEDED;
+    border-radius: 12px;
+    font-weight: 900;
+    font-size: 34px;
+    line-height: 40px;
+    color: #373745;
+}

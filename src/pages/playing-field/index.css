@@ -1,0 +1,39 @@
+.common {
+    margin-top: 64px;
+    padding: 80px 40px;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+
+}
+
+/*Игровое поле*/
+
+.center_field {
+    display: flex;
+    width: 663px;
+    flex-direction: column;
+    gap: 40px;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.play_field {
+
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+
+}
+.board{
+    width: 663px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 4px;
+}
