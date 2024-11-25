@@ -7,16 +7,18 @@ type Props = {
     style?: CSSProperties;
     color?: "white" | "black";
     backgroundColor?: "#60C2AA" | "#F7F7F7";
+    type?: "button" | "submit";
     onClick?: () => void;
 }
 
-export const Button: React.FC<Props> = ({ backgroundColor = "#60C2AA", disabled = false, children, color = "white", style, onClick }) => {
+export const Button: React.FC<Props> = ({ backgroundColor = "#60C2AA", disabled = false, children, color = "white", style, onClick, type = "button" }) => {
 
     return (
         <button
             style={{ backgroundColor: backgroundColor, color: backgroundColor === "#60C2AA" ? color : "black", ...style }}
             className="defaultButton"
             disabled={disabled}
+            type={type}
             onClick={onClick}
             onMouseOver={(e) => {
                 if (!disabled) {

@@ -33,3 +33,16 @@ textarea.defaultInput {
     color: #B1B1B7;
     letter-spacing: 0.24px;
 }
+.errorMessage {
+    letter-spacing: 0.25px;
+    font-size: 12px;
+    line-height: 16px;
+    color: red;
+}
+
+.valid{
+    border: 2px solid green;
+}
+.invalid{
+    border: 2px solid red;
+}
