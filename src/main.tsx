@@ -9,6 +9,8 @@ import { GameHistory } from "./pages/game-history";
 import { ActivePlayers } from "./pages/active-players";
 import { Players } from "./pages/players";
 import { Layout } from "./components/layout";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
 
 const container = document.getElementById("root");
 
@@ -49,7 +51,9 @@ if (container) {
 
   root.render(
     <React.StrictMode>
-      <RouterProvider router={router} />
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
     </React.StrictMode>,
   )
 } else {
