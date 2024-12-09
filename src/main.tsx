@@ -11,9 +11,10 @@ import { Players } from "./pages/players";
 import { Layout } from "./components/layout";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
+import { ModalProvider } from "./components/modal-context";
+import { ProtectedRoute } from "./components/protected-route";
 
 const container = document.getElementById("root");
-
 const router = createBrowserRouter([
   {
     path: '/auth',
@@ -40,7 +41,11 @@ const router = createBrowserRouter([
       },
       {
         path: "players",
-        element: <Players />
+        element: (
+          <ProtectedRoute>
+            <Players />
+          </ProtectedRoute>
+        ),
       },
     ]
   }
@@ -52,7 +57,9 @@ if (container) {
   root.render(
     <React.StrictMode>
       <Provider store={store}>
-        <RouterProvider router={router} />
+        <ModalProvider>
+          <RouterProvider router={router} />
+        </ModalProvider>
       </Provider>
     </React.StrictMode>,
   )
