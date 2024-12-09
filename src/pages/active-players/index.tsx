@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './index.css'
 import { Container } from '../../components/container';
 import { Text } from '../../components/text';
@@ -7,45 +7,57 @@ import { Status } from '../../components/status';
 import { Row } from '../../components/row';
 import { Cell } from '../../components/cell';
 import { Switch } from '../../components/switch';
+import { useGetAllPlayersQuery } from '../../app/services/playerApi';
+import { InviteGameModal } from '../../components/invite-game-modal';
+import { useModal } from '../../components/modal-context';
 export const ActivePlayers = () => {
+  const [showAvailableOnly, setShowAvailableOnly] = useState(false); // Состояние для переключателя
+  const { data, refetch } = useGetAllPlayersQuery();
+  const { openModal } = useModal();
+  const handleSwitchChange = () => {
+    setShowAvailableOnly(!showAvailableOnly);
+    refetch();
 
-  const playerActive = [
-    { FIO: 'Александров Игнат Анатолиевич', status: "Свободен" },
-    { FIO: 'Василенко Эрик Платонович', status: "В игре" },
-    { FIO: 'Быков Юрий Виталиевич', status: "В игре" },
-    { FIO: 'Галкин Феликс Платонович', status: "В игре" },
-    { FIO: 'Комаров Цефас Александрович', status: "В игре" },
-    { FIO: 'Шевченко Рафаил Михайлович', status: "В игре" },
-    { FIO: 'Гордеев Шамиль Леонидович', status: "Свободен" },
-    { FIO: 'Бобров Фёдор Викторович', status: "Свободен" },
-    { FIO: 'Суворов Феликс Григорьевич', status: "В игре" },
-    { FIO: 'Марков Йошка Фёдорович', status: "Свободен" }
-
-  ]
-  const elements = playerActive.map(item =>
-    <Row style={{ boxShadow: "none", padding: "12px 0px" }}>
-      <Cell style={{ width: "360px" }}>{item.FIO}</Cell>
-      {item.status === "Свободен" ? <Status /> : <Status status='isPlay' />}
-      {item.status === "Свободен" ? <Button >Позвать играть</Button> :
-        <Button disabled={true} backgroundColor="#F7F7F7" >Позвать играть</Button>}
-    </Row>
+  };
+  const filteredData = data?.filter(player =>
+    !showAvailableOnly || player.availability === "AVAILABLE"
   );
   return (
-
-    <Container className="active-players">
-      <Container style={{ justifyContent: 'space-between' }}>
-        <Text style={{ fontWeight: 700, fontSize: "24px", lineHeight: '36px' }}>Активные игроки</Text>
-        <Container style={{ width: '', alignItems: 'center' }}>
-          <Text style={{ marginRight: '8px' }}>Только свободные</Text>
-          <Container style={{ width: '' }}>
-            <Switch />
+    <>
+      <Container className="active-players">
+        <Container style={{ justifyContent: 'space-between' }}>
+          <Text style={{ fontWeight: 700, fontSize: "24px", lineHeight: '36px' }}>Активные игроки</Text>
+          <Button onClick={() => openModal('inviteModal')}>Открыть модалку</Button>
+          <Container style={{ maxWidth: '200px', alignItems: 'center' }}>
+            <Text style={{ marginRight: '8px' }}>Только свободные</Text>
+            <Container style={{ maxWidth: '35px' }}>
+              <Switch isChecked={showAvailableOnly} onChange={handleSwitchChange} />
+            </Container>
           </Container>
         </Container>
+        <Container style={{ flexDirection: "column", alignItems: 'flex-start' }}>
+          {
+            filteredData && filteredData.length > 0
+              ? filteredData.map(
+                ({
+                  id,
+                  fullName,
+                  availability,
+                  status
+                }) =>
+                  status === 'ACTIVE' &&
+                  <Row key={id} style={{ boxShadow: "none", padding: "12px 0px", gap: '16px' }}>
+                    <Cell style={{ width: "300px" }}>{fullName}</Cell>
+                    {availability === "AVAILABLE" ? <Status /> : <Status status='isPlay' />}
+                    {availability === "AVAILABLE" ? <Button >Позвать играть</Button> :
+                      <Button disabled={true} backgroundColor="#F7F7F7" >Позвать играть</Button>}
+                  </Row>
+              )
+              : null
+          }
+        </Container>
       </Container>
-      <Container style={{ flexDirection: "column", alignItems: 'flex-start' }}>
-        {elements}
-      </Container>
-    </Container>
-
+      <InviteGameModal />
+    </>
   )
 }
