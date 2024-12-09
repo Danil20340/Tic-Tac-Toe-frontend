@@ -1,45 +1,132 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import woman from '../../assets/woman.svg'
 import man from '../../assets/man.svg'
 import './index.css'
 import { Button } from '../button'
-import { Input } from '../input'
 import { Text } from '../text'
+import { AuthInput } from '../auth-input'
+import { useForm } from 'react-hook-form'
+import { useGetPlayerByIdQuery, useRegisterMutation } from '../../app/services/playerApi'
+import { hasErrorField } from '../../utils/has-error-field'
+import RadioGroup from '../radio-group'
+import { useModal } from '../modal-context'
+import { Modal } from '../modal-template'
+import close from '../../assets/close.svg'
 
+type AddPlayerModalProps = {
+    fullname: string,
+    age: number,
+    gender: string,
+    login: string,
+    password: string
+}
+type Props = {
+    modalState: 'ADD' | 'EDIT';
+    selectPlayer: string | '';
+    onPlayerAdded: () => void;
+};
 
+export const AddPlayerModal: React.FC<Props> = ({ onPlayerAdded, modalState, selectPlayer }) => {
+    const { data: player } = useGetPlayerByIdQuery({ id: selectPlayer }, { skip: !selectPlayer || modalState === 'ADD' });
+    const {
+        handleSubmit,
+        control,
+        formState: { isValid, errors },
+        reset,
+    } = useForm<AddPlayerModalProps>({
+        mode: 'onChange',
+        reValidateMode: 'onBlur',
+        defaultValues: {
+            login: '',
+            password: '',
+            fullname: '',
+            age: 1,
+            gender: '',
+        },
+    });
 
-export const AddPlayerModal = () => {
+    useEffect(() => {
+        if (modalState === 'EDIT' && player) {
+            reset({
+                login: '',
+                password: '',
+                fullname: player.fullName || '',
+                age: player.age || 0,
+                gender: player.gender || '',
+            });
+        } else if (modalState === 'ADD') {
+            reset({
+                login: '',
+                password: '',
+                fullname: '',
+                age: 1,
+                gender: '',
+            });
+        }
+    }, [modalState, player]);
+    const [register, { isLoading }] = useRegisterMutation();
+    const [error, setError] = useState('');
+    const onSubmit = async (data: AddPlayerModalProps) => {
+        try {
+            await register(data).unwrap();
+            closeModal("playerModal");
+            onPlayerAdded();
+            reset();
+        } catch (error) {
+            if (hasErrorField(error)) {
+                setError(error.data.error)
+            }
+        }
+    }
+    const { closeModal } = useModal();
     return (
-        <>
-            <Text style={{ fontWeight: 700, fontSize: "24px", lineHeight: '36px' }}>Добавьте игрока</Text>
-
+        <Modal name='playerModal'>
+            <div className="btn-close" style={{ display: 'flex', justifyContent: 'end' }} onClick={() => closeModal("playerModal")}><img src={close} alt="" /></div>
+            <Text style={{ fontWeight: 700, fontSize: "24px", lineHeight: '36px' }}>{modalState === 'EDIT' ? "Редактируйте игрока" : "Добавьте игрока"}</Text>
+            <Text style={{ fontWeight: 500, marginBottom: '-28px', display: 'flex', justifyContent: 'start' }}>Логин</Text>
+            <AuthInput
+                control={control}
+                name="login"
+                type="login"
+                required={selectPlayer === 'EDIT' ? 'Обязательное поле' : undefined}
+                placeholder="Логин"
+                style={errors.login || error ? { border: '1px solid red' } : {}}
+                onFieldChange={() => setError('')}
+            />
+            <Text style={{ fontWeight: 500, marginBottom: '-28px', display: 'flex', justifyContent: 'start' }}>Пароль</Text>
+            <AuthInput
+                control={control}
+                name="password"
+                type="password"
+                required={selectPlayer === 'EDIT' ? 'Обязательное поле' : undefined}
+                placeholder="Пароль"
+                style={errors.password || error ? { border: '1px solid red' } : {}}
+                errorMessage={error}
+                onFieldChange={() => setError('')}
+            />
             <Text style={{ fontWeight: 500, marginBottom: '-28px', display: 'flex', justifyContent: 'start' }}>ФИО</Text>
-            <Input placeholder="Иванов Иван Иванович" />
+            <AuthInput name="fullname" type="text" required='Обязательное поле' control={control} placeholder="Иванов Иван Иванович" />
 
-            <div className="modal-row">
+            <div style={{ display: 'flex', gap: '40px', alignSelf: 'flex-start' }}>
                 <div className="input-set">
                     <Text style={{ fontWeight: 500, display: 'flex', justifyContent: 'start' }}>Возраст</Text>
-                    <Input type='number' style={{ width: '85px' }} placeholder="0" />
+                    <AuthInput name="age" type='number' required='Обязательное поле' control={control} style={{ width: '85px' }} placeholder="0" />
                 </div>
                 <div className="input-set">
                     <Text style={{ fontWeight: 500, display: 'flex', justifyContent: 'start' }}>Пол</Text>
-                    <div className="radio-form">
-                        <label className="radio-control">
-                            <input type="radio" name="gender" value="usd" />
-                            <span className="radio-input">
-                                <img src={woman} alt="" />
-                            </span>
-                        </label>
-                        <label className="radio-control">
-                            <input type="radio" name="gender" value="eur" />
-                            <span className="radio-input">
-                                <img src={man} alt="" />
-                            </span>
-                        </label>
-                    </div>
+                    <RadioGroup
+                        name="gender"
+                        control={control}
+                        options={[
+                            { value: "FEMALE", label: "Женщина", icon: woman },
+                            { value: "MALE", label: "Мужчина", icon: man },
+                        ]}
+                        rules={{ required: "Выберите пол" }}
+                        error={errors.gender?.message}
+                    />
                 </div>
             </div>
-            <Button>Добавить</Button>
-        </>
+            <Button disabled={isLoading || !isValid} onClick={handleSubmit(onSubmit)}> {modalState === 'EDIT' ? "Редактировать" : "Добавить"}</Button >
+        </Modal >
     );
 }
