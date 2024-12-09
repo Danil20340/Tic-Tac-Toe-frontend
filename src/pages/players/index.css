@@ -1,0 +1,12 @@
+.playerField:hover {
+    background-color: #60C2AA4D;
+    cursor: pointer;
+    border-radius: 12px !important;
+}
+
+.selectPlayer {
+    background-color: #60c2aa !important;
+    color: white !important;
+    cursor: pointer;
+    border-radius: 12px !important;
+}
