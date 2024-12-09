@@ -1,18 +1,23 @@
-import React from 'react'
+import React from "react";
+import { useModal } from "../modal-context/index";
 import './index.css'
-type Props = {
-    children: React.ReactNode;
-    active: boolean;
-}
 
-export const ModalTemplate: React.FC<Props> = ({ active, children }) => {
+type ModalProps = {
+    name: string;
+    children: React.ReactNode;
+    addClose?: boolean;
+};
+
+export const Modal: React.FC<ModalProps> = ({ name, children, addClose = true }) => {
+    const { isModalOpen, closeModal } = useModal();
+
+    if (!isModalOpen(name)) return null;
 
     return (
-        <div className={active ? "modal active" : "modal"} >
-            <div className={active ? "modal__content active" : "modal__content"} onClick={e => e.stopPropagation()}>
+        <div className="modal active">
+            <div className="modal__content active" onClick={(e) => e.stopPropagation()}>
                 {children}
             </div>
         </div>
     );
-
-}
+};

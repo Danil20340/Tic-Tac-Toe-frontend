@@ -21,7 +21,7 @@
     flex-direction: column;
     padding: 24px 24px 40px;
     max-width: 400px;
-    max-height: 412px;
+    max-height: 550px;
     width: -webkit-fill-available;
     height: -webkit-fill-available;
     justify-content: space-between;
@@ -35,4 +35,8 @@
 
 .modal__content.active {
     transform: scale(1);
+}
+
+.btn-close {
+    cursor: pointer;
 }
