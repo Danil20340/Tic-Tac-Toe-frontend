@@ -25,12 +25,12 @@ export const PlayingField = () => {
   return (
     <Container className='common'>
       <Gamers />
-      <Container style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', gap: '40px' }}>
+      <Container style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', gap: '40px', backgroundColor: '#f6f6f6' }}>
         <Timer time={timeWork} onChangeTime={setTimeWork} />
         <Board squares={board} click={handleClick} />
         <Step />
       </Container>
       <Chat />
-    </Container>
+    </Container >
   );
 };

@@ -3,11 +3,13 @@ import './index.css'
 type Props = {
     children: React.ReactNode;
     style?: CSSProperties;
-    key?: number;
+    key?: number | string;
+    className?: string;
+    onClick?: () => void;
 }
 
-export const Row: React.FC<Props> = ({ style, children }) => {
+export const Row: React.FC<Props> = ({ style, children, className, onClick }) => {
     return (
-        <div style={style} className="row-dat">{children}</div>
+        <div onClick={onClick} style={style} className={`row-dat ${className || ''}`}>{children}</div>
     )
 }

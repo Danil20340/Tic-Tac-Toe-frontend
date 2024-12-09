@@ -9,7 +9,7 @@ export const Chat = () => {
     const [message, setMessage] = useState('');
     return (
         <div id="all_chat">
-            <Container style={{ gap: '12px', flexDirection: 'column' }} >
+            <Container style={{ gap: '12px', flexDirection: 'column', backgroundColor: '#f6f6f6' }} >
                 <div className="interlocutor">
                     <Container style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                         <div style={{ color: '#60C2AA' }} className="player-text">Плюшкина Екатерина</div>
@@ -39,7 +39,7 @@ export const Chat = () => {
                     <div className="special-text">Отойду пока кофе попить, напиши в тг как сходишь</div>
                 </div>
             </Container>
-            <Container style={{ gap: '12px', alignItems: 'center' }}>
+            <Container style={{ gap: '12px', alignItems: 'center', backgroundColor: '#f6f6f6' }}>
                 <Input
                     type='textArea'
                     placeholder='Сообщение...'
