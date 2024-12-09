@@ -5,7 +5,6 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 16px 40px;
-    gap: 10px;
     position: fixed;
     width: -webkit-fill-available;
     background: #FFFFFF;
@@ -18,35 +17,45 @@ header #nav-bar {
     flex-direction: row;
     align-items: center;
     padding: 0;
-    gap: 40px;
+    max-width: 605px;
+    justify-content: space-between;
+    width: -webkit-fill-available;
 }
+
 #signout {
     line-height: 0;
-    color: #373745; /* Начальный цвет */
+    color: #373745;
+    /* Начальный цвет */
+    padding: 5px;
 }
 
 #signout:hover {
-    color: #3BA189; /* Цвет при наведении */
+    color: #3BA189;
+    /* Цвет при наведении */
 }
-.nav-b{
+
+.nav-b {
     font-weight: 500;
+    text-align: center;
     line-height: 24px;
     border-radius: 200px;
     padding: 4px 12px;
 
 }
-#nav-bar a.active{
-    color:#FFFFFF;
+
+#nav-bar a.active {
+    color: #FFFFFF;
     border-radius: 200px;
     background: #60C2AA;
 }
-#nav-bar a.active:hover{
-    color:#FFFFFF;
+
+#nav-bar a.active:hover {
+    color: #FFFFFF;
     border-radius: 200px;
-    background: #60C2AA!important;
+    background: #60C2AA !important;
 }
+
 .nav-b:hover {
     cursor: pointer;
     background-color: #F7F7F7;
 }
-
