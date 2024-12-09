@@ -1,0 +1,28 @@
+.radio-form {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.radio-form .radio-control input {
+    display: none;
+}
+
+.radio-form .radio-control .radio-input {
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 100%;
+    cursor: pointer;
+    border: 1px solid #DCDCDF;
+    display: flex;
+}
+
+.radio-form .radio-control .radio-input img {
+    width: 32px;
+}
+
+.radio-form .radio-control input:checked+.radio-input {
+    background: #60C2AA;
+}

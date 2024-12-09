@@ -24,7 +24,7 @@ export const AuthInput: React.FC<Props> = (
         styleAuth,
         style,
         errorMessage,
-        onFieldChange
+        onFieldChange,
     }
 ) => {
     const {
@@ -34,8 +34,17 @@ export const AuthInput: React.FC<Props> = (
     } = useController({
         name,
         control,
+        defaultValue: '',
         rules: {
-            required
+            required,
+            validate: (value) => {
+                if (type !== 'number') return true; // Валидация не нужна, если тип не "number"
+                const num = Number(value); // Преобразуем значение в число
+                if (isNaN(num)) return 'Значение должно быть числом';
+                if (!Number.isInteger(num)) return 'Число должно быть целым';
+                if (num <= 0) return 'Число должно быть больше нуля';
+                return true; // Валидация успешна
+            }
         }
     });
 
