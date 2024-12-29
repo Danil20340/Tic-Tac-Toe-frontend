@@ -4,8 +4,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 import NavButton from '../nav-button';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, selectCurrent } from '../../features/player/playerSlice';
-import { useGetCurrentPlayerQuery } from '../../app/services/playerApi';
-
 
 export const NavBar = () => {
   const currentUser = useSelector(selectCurrent);

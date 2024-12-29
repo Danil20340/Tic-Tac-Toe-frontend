@@ -1,54 +1,65 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Player } from "../../app/types";
 import { playerApi } from "../../app/services/playerApi";
 import { RootState } from "../../app/store";
 
 type InitialState = {
   player: Player | null;
-  isAuthenticated: boolean;
-  players: Player[] | null;
   current: Player | null;
-  token?: string
-}
+  isAuthenticated: boolean;
+  token?: string;
+  socketConnected: boolean;
+};
 
 const initialState: InitialState = {
   player: null,
-  isAuthenticated: false,
-  players: null,
-  current: null
-}
+  current: null,
+  isAuthenticated: !!localStorage.getItem("token"),
+  token: localStorage.getItem("token") || undefined,
+  socketConnected: false
+};
 
 const slice = createSlice({
   name: 'player',
   initialState,
   reducers: {
-    logout: () => initialState,
-    resetplayer: (state) => {
-      state.player = null
+    logout: () => {
+      localStorage.removeItem("token");
+      return { ...initialState };
+    },
+    setSocketConnected: (state, action: PayloadAction<boolean>) => {
+      state.socketConnected = action.payload;
     }
   },
   extraReducers: (builder) => {
     builder
       .addMatcher(playerApi.endpoints.login.matchFulfilled, (state, action) => {
-        state.token = action.payload.token
+        const token = action.payload.token;
+        state.token = token;
         state.isAuthenticated = true;
       })
-      // .addMatcher(playerApi.endpoints.current.matchFulfilled, (state, action) => {
-      //   state.isAuthenticated = true;
-      //   state.current = action.payload
-      // })
-      // .addMatcher(playerApi.endpoints.getplayerById.matchFulfilled, (state, action) => {
-      //   state.player = action.payload;
-      // })
+      .addMatcher(playerApi.endpoints.getCurrentPlayer.matchFulfilled, (state, action) => {
+        state.current = action.payload;
+      })
   }
 })
 
-export const { logout, resetplayer } = slice.actions;
 export default slice.reducer
 
-export const selectIsAuthenticated = (state: RootState) =>
-  state.player.isAuthenticated
+export const { logout, setSocketConnected } = slice.actions;
 
-export const selectCurent = (state: RootState) => state.player.current
+// Селекторы
+export const selectIsAuthenticated = (state: RootState) => state.player.isAuthenticated;
+export const selectCurrent = (state: RootState) => state.player.current;
+export const selectPlayer = (state: RootState) => state.player.player;
+export const selectSocket = (state: RootState) => state.player.socketConnected;
 
-export const selectplayer = (state: RootState) => state.player.player
+// Комбинированный селектор для оптимизации
+export const selectPlayerSocketState = createSelector(
+  [selectIsAuthenticated, selectCurrent, selectSocket],
+  (isAuthenticated, currentPlayer, socketConnected) => ({
+    isAuthenticated,
+    currentPlayer,
+    socketConnected,
+  })
+);
