@@ -24,7 +24,7 @@ const baseQueryWithReauth: BaseQueryFn<
   = async (args, api, extraOptions) => {
     const result = await baseQuery(args, api, extraOptions);
 
-    if (result.error?.status === 403 || result.error?.status === 401) {
+    if (result.error?.status === 403 || result.error?.status === 401 || result.error?.status === 404) {
       // Логика обработки ошибки токена
       api.dispatch(logout()); // Сбрасываем Redux-состояние
     }
