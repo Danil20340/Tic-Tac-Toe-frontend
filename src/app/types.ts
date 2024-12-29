@@ -14,7 +14,11 @@ export enum GameStatus {
     FINISHED = 'FINISHED',
     DRAW = 'DRAW',
 }
-
+export enum InviteStatus {
+    PENDING = 'PENDING',
+    ACCEPTED = 'ACCEPTED',
+    DECLINED = 'DECLINED'
+}
 export enum Symbol {
     X = 'X',
     O = 'O',
@@ -75,9 +79,21 @@ export type ChatMessage = {
 // Rating
 export type Rating = {
     id: string;
-    player: Player;
-    playerId: string;
+    playerName: string;
     totalGames: number;
     wins: number;
     losses: number;
+    draw: number;
+    winPercentage: number;
+}
+
+export type Invitation = {
+    id: string;
+    fromPlayer: Player;
+    fromPlayerId: string;
+    toPlayer: Player;
+    toPlayerId: string;
+    status: InviteStatus;
+    createdAt: Date;
+    updatedAt: Date;
 }
