@@ -1,0 +1,66 @@
+.notification-container {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 1000; /* Убедимся, что контейнер уведомлений выше других элементов */
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible; /* Уведомление будет видно по умолчанию */
+  pointer-events: auto; /* Разрешаем взаимодействие с уведомлением */
+  animation: fadeIn 0.3s forwards, fadeOut 0.5s 4.5s forwards;
+}
+
+.notification.success {
+  background-color: #4caf50;
+}
+
+.notification.error {
+  background-color: #f44336;
+}
+
+.notification.info {
+  background-color: #2196f3;
+}
+
+.notification.warning {
+  background-color: #ff9800;
+}
+
+.notification .icon {
+  font-size: 30px;
+}
+
+.notification .message {
+  flex: 1;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden; /* Убираем уведомление из потока */
+    transform: translateY(20px);
+    pointer-events: none; /* Отключаем взаимодействие с уведомлением */
+    z-index: -1; /* Ставим уведомление ниже всех остальных элементов */
+  }
+}

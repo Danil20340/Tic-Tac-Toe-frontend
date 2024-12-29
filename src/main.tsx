@@ -13,6 +13,7 @@ import { Provider } from "react-redux";
 import { store } from "./app/store";
 import { ModalProvider } from "./components/modal-context";
 import { ProtectedRoute } from "./components/protected-route";
+import { NotificationProvider } from "./components/notification-provider";
 
 const container = document.getElementById("root");
 const router = createBrowserRouter([
@@ -57,9 +58,11 @@ if (container) {
   root.render(
     <React.StrictMode>
       <Provider store={store}>
-        <ModalProvider>
-          <RouterProvider router={router} />
-        </ModalProvider>
+        <NotificationProvider>
+          <ModalProvider>
+            <RouterProvider router={router} />
+          </ModalProvider>
+        </NotificationProvider>
       </Provider>
     </React.StrictMode>,
   )
