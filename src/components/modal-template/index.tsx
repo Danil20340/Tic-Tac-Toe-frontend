@@ -4,20 +4,22 @@ import './index.css'
 
 type ModalProps = {
     name: string;
-    children: React.ReactNode;
-    addClose?: boolean;
-};
-
-export const Modal: React.FC<ModalProps> = ({ name, children, addClose = true }) => {
-    const { isModalOpen, closeModal } = useModal();
-
+    children: React.ReactNode | ((data: Record<string, any> | null) => React.ReactNode);
+  };
+  
+  export const Modal: React.FC<ModalProps> = ({ name, children }) => {
+    const { isModalOpen, closeModal, getModalData } = useModal();
+  
     if (!isModalOpen(name)) return null;
-
+  
+    const data = getModalData(name);
+  
     return (
-        <div className="modal active">
-            <div className="modal__content active" onClick={(e) => e.stopPropagation()}>
-                {children}
-            </div>
+      <div className="modal active" >
+        <div className="modal__content active" onClick={(e) => e.stopPropagation()}>
+          {typeof children === "function" ? children(data) : children}
         </div>
+      </div>
     );
-};
+  };
+  

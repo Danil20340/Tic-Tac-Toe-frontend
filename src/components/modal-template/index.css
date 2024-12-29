@@ -8,7 +8,7 @@
     justify-content: center;
     opacity: 0;
     transition: 0.5s;
-    pointer-events: none;
+    z-index: 1000;
 }
 
 .modal.active {
@@ -39,4 +39,9 @@
 
 .btn-close {
     cursor: pointer;
+}
+
+body.modal-open *:not(.modal, .modal *) {
+    pointer-events: none;
+    user-select: none;
 }
