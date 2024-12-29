@@ -12,7 +12,7 @@ export const playerApi = api.injectEndpoints({
     }),
     register: builder.mutation<
       { fullName: string; age: number; gender: string },
-      { login: string; password: string; fullName: string; age: number; gender: string }
+      { login: string; password: string; fullname: string; age: number; gender: string }
     >({
       query: (playerData) => ({
         url: "/register",
@@ -41,11 +41,23 @@ export const playerApi = api.injectEndpoints({
       { id: string; }
     >({
       query: ({ id }) => ({
-        url: `/player/${id}`,
+        url: `/change/${id}`,
         method: "PATCH"
       }),
     }),
-  }),
+    getPlayerById: builder.query<Player, { id: string; }>({
+      query: ({ id }) => ({
+        url: `/player/${id}`,
+        method: "GET"
+      }),
+    }),
+    getCurrentPlayer: builder.query<Player, void>({
+      query: () => ({
+        url: `/current`,
+        method: "GET"
+      })
+    })
+  })
 });
 
 export const {
@@ -55,8 +67,12 @@ export const {
   useLazyGetAllPlayersQuery,
   useUpdatePlayerMutation,
   useChangePlayerStatusMutation,
+  useGetPlayerByIdQuery,
+  useLazyGetPlayerByIdQuery,
+  useGetCurrentPlayerQuery,
+  useLazyGetCurrentPlayerQuery,
 } = playerApi;
 
 export const {
-  endpoints: { login, register, getAllPlayers, updatePlayer, changePlayerStatus },
+  endpoints: { login, register, getAllPlayers, updatePlayer, changePlayerStatus, getPlayerById },
 } = playerApi;
