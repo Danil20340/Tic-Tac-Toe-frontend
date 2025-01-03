@@ -42,22 +42,27 @@ export const ActivePlayers = () => {
   };
   useEffect(() => {
     if (socket) {
-      socket.on("online-players", (playersData: [string, { fullName: string; availability: AvailabilityStatus; }][]) => {
+      socket.on("online-players", (playersData: { id: string; fullName: string; availability: AvailabilityStatus }[]) => {
         console.log(playersData);
 
-        const formattedPlayers = playersData.map(([id, player]) => ({
-          id,
-          fullName: player.fullName, // Извлекаем строку fullName
-          availability: player.availability, // Извлекаем доступность
-        }));
+        const formattedPlayers = playersData
+          .filter((player) => player.id !== current) // Исключаем текущего пользователя
+          .map((player) => ({
+            id: player.id,
+            fullName: player.fullName,
+            availability: player.availability,
+          }));
+
         setPlayers(formattedPlayers);
       });
+
       // Очистка обработчика при размонтировании компонента
       return () => {
         socket.off("online-players");
       };
     }
-  }, [socket]);
+  }, [socket, current]);
+
 
   // Фильтрация данных
   const filteredData = players.filter(
