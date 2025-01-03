@@ -25,9 +25,16 @@ export const InviteGameModal = () => {
     }, [isModalOpen, fromPlayerId, fetchPlayer]);
 
     const handleAccept = () => {
-        console.log('Приглашение принято от:', fromPlayerId);
+        console.log('Приглашение принято от игрока:', current?.id, 'Отказ отправлен игроку:', player?.id);
         closeModal('inviteModal');
-        console.log(player?.fullName);
+        if (socket && isConnected) {
+
+            socket.emit("accept", { fromPlayerId: current?.id, toPlayerId: player?.id });
+
+            return () => {
+                socket.off("accept");
+            };
+        }
     };
 
     const handleDecline = () => {
