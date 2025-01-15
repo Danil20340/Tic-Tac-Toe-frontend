@@ -2,22 +2,21 @@ import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Player } from "../../app/types";
 import { playerApi } from "../../app/services/playerApi";
 import { RootState } from "../../app/store";
+import { disconnectSocket } from "../../utils/socketSingleton";
 
 type InitialState = {
-  player: Player | null;
   current: Player | null;
   isAuthenticated: boolean;
   token?: string;
-  socketConnected: boolean;
 };
 
-const initialState: InitialState = {
-  player: null,
+const getInitialState = (): InitialState => ({
   current: null,
   isAuthenticated: !!localStorage.getItem("token"),
   token: localStorage.getItem("token") || undefined,
-  socketConnected: false
-};
+});
+
+const initialState = getInitialState();
 
 const slice = createSlice({
   name: 'player',
@@ -25,10 +24,9 @@ const slice = createSlice({
   reducers: {
     logout: () => {
       localStorage.removeItem("token");
-      return { ...initialState };
-    },
-    setSocketConnected: (state, action: PayloadAction<boolean>) => {
-      state.socketConnected = action.payload;
+      disconnectSocket();
+      const newState = getInitialState();
+      return newState;
     }
   },
   extraReducers: (builder) => {
@@ -40,26 +38,23 @@ const slice = createSlice({
       })
       .addMatcher(playerApi.endpoints.getCurrentPlayer.matchFulfilled, (state, action) => {
         state.current = action.payload;
-      })
+      });
   }
-})
+});
 
-export default slice.reducer
+export default slice.reducer;
+export const { logout } = slice.actions;
 
-export const { logout, setSocketConnected } = slice.actions;
 
 // Селекторы
 export const selectIsAuthenticated = (state: RootState) => state.player.isAuthenticated;
 export const selectCurrent = (state: RootState) => state.player.current;
-export const selectPlayer = (state: RootState) => state.player.player;
-export const selectSocket = (state: RootState) => state.player.socketConnected;
 
 // Комбинированный селектор для оптимизации
 export const selectPlayerSocketState = createSelector(
-  [selectIsAuthenticated, selectCurrent, selectSocket],
-  (isAuthenticated, currentPlayer, socketConnected) => ({
+  [selectIsAuthenticated, selectCurrent],
+  (isAuthenticated, currentPlayer) => ({
     isAuthenticated,
-    currentPlayer,
-    socketConnected,
+    currentPlayer
   })
 );
