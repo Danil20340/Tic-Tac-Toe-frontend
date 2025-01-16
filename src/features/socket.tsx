@@ -26,7 +26,6 @@ export const useSocket = (): { socket: Socket | null; isConnected: boolean } => 
 
       const handleConnect = () => {
         setIsConnected(true);
-
         if (!registeredPlayers.has(currentPlayer.id)) {
           socket.emit("register", { playerId: currentPlayer.id, fullName: currentPlayer.fullName });
           console.log("WebSocket подключен:", { playerId: currentPlayer.id });
@@ -36,7 +35,9 @@ export const useSocket = (): { socket: Socket | null; isConnected: boolean } => 
 
       const handleDisconnect = () => {
         setIsConnected(false);
+        registeredPlayers.delete(currentPlayer.id);
         console.log("WebSocket отключен");
+
       };
 
       socket.on("connect", handleConnect);
@@ -49,8 +50,6 @@ export const useSocket = (): { socket: Socket | null; isConnected: boolean } => 
       return () => {
         socket.off("connect", handleConnect);
         socket.off("disconnect", handleDisconnect);
-        socket.disconnect();
-        console.log("WebSocket отключен");
       };
     }
   }, [isAuthenticated, currentPlayer]);
