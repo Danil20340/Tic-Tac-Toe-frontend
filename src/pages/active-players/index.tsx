@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './index.css'
 import { Container } from '../../components/container';
 import { Text } from '../../components/text';
@@ -7,12 +7,13 @@ import { Status } from '../../components/status';
 import { Row } from '../../components/row';
 import { Cell } from '../../components/cell';
 import { Switch } from '../../components/switch';
-import { useGetAllPlayersQuery } from '../../app/services/playerApi';
 import { useSelector } from 'react-redux';
-import { selectCurrent, selectSocket } from '../../features/player/playerSlice';
+import { selectCurrent } from '../../features/player/playerSlice';
 import { useSocket } from '../../features/socket';
-import { useNotifications } from '../../components/notification-provider';
 import { AvailabilityStatus, Player } from '../../app/types';
+import { getSocket } from '../../utils/socketSingleton';
+import { useNotifications } from '../../components/notification-provider';
+import { removeThirdWord } from '../../utils/remove-third-word';
 
 type PlayerData = {
   id: string;
@@ -22,7 +23,8 @@ type PlayerData = {
 export const ActivePlayers = () => {
   const [players, setPlayers] = useState<PlayerData[]>([]);
   const [showAvailableOnly, setShowAvailableOnly] = useState(false); // Состояние для переключателя
-  const { socket, isConnected } = useSocket();
+  let { socket, isConnected } = useSocket();
+  const { addNotification } = useNotifications();
   // Получаем текущего игрока через useSelector
   const currentPlayer = useSelector(selectCurrent);
   const current = currentPlayer?.id;
@@ -30,45 +32,38 @@ export const ActivePlayers = () => {
   const handleSwitchChange = () => {
     setShowAvailableOnly(!showAvailableOnly);
   };
-
+  const formatPlayers = (playersData: PlayerData[]): PlayerData[] =>
+    playersData.filter((player) => player.id !== current);
   const handleInvite = (playerId: string) => {
-    if (socket && isConnected) {
-      console.log(`Приглашение отправлено игроку ${playerId}`);
-      socket.emit("invite", { fromPlayerId: current, toPlayerId: playerId });
-      console.log(`Игрок ${playerId} приглашен игроком ${current}`);
-    } else {
-      console.error("Сокет недоступен или не подключен");
-    }
+    if (socket?.id === undefined) socket = getSocket();
+    if (socket && (isConnected || socket.connected)) socket.emit("invite", { fromPlayerId: current, toPlayerId: playerId });
   };
   useEffect(() => {
-    if (socket) {
-      socket.on("online-players", (playersData: { id: string; fullName: string; availability: AvailabilityStatus }[]) => {
-        console.log(playersData);
-
-        const formattedPlayers = playersData
-          .filter((player) => player.id !== current) // Исключаем текущего пользователя
-          .map((player) => ({
-            id: player.id,
-            fullName: player.fullName,
-            availability: player.availability,
-          }));
-
-        setPlayers(formattedPlayers);
-      });
-
+    const handlePlayers = (playersData: PlayerData[]) => {
+      setPlayers(formatPlayers(playersData));
+    };
+    if (socket?.id === undefined) socket = getSocket();
+    if (socket && (isConnected || socket.connected)) {
+      if (players.length === 0) {
+        socket.emit("getOnlinePlayers", { fromPlayerId: current });
+        socket.on("players", handlePlayers);
+      }
+      socket.on("online-players", handlePlayers);
       // Очистка обработчика при размонтировании компонента
       return () => {
-        socket.off("online-players");
+        socket?.off("online-players");
+        socket?.off("players");
       };
     }
-  }, [socket, current]);
+  }, [socket]);
 
 
   // Фильтрация данных
-  const filteredData = players.filter(
-    (player) => !showAvailableOnly || player.availability === AvailabilityStatus.AVAILABLE
-  );
-  // console.log(players);
+  const filteredData = useMemo(() => {
+    return players.filter(
+      (player) => !showAvailableOnly || player.availability === AvailabilityStatus.AVAILABLE
+    );
+  }, [players, showAvailableOnly]);
   return (
     <>
       <Container className="active-players">
@@ -98,7 +93,7 @@ export const ActivePlayers = () => {
                     ) : (
                       <Status status="isPlay" />
                     )}
-                    {availability === 'AVAILABLE' ? (<Button onClick={() => handleInvite(id)}>Позвать играть</Button>) :
+                    {availability === 'AVAILABLE' ? (<Button onClick={() => { handleInvite(id); addNotification(`Игрок ${removeThirdWord(fullName)} успешно приглашен`, "success"); }}>Позвать играть</Button>) :
                       (
                         <Button disabled={true} backgroundColor="#F7F7F7">Позвать играть</Button>
                       )}
