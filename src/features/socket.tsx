@@ -9,43 +9,34 @@ const registeredPlayers: Set<string> = new Set(); // Глобальный наб
 export const useSocket = (): { socket: Socket | null; isConnected: boolean } => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const currentPlayer = useSelector(selectCurrent);
-  const socketRef = useRef<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
+    const socket = getSocket();
+
     if (isAuthenticated && currentPlayer) {
-      if (!socketRef.current) {
-        socketRef.current = getSocket(); // WebSocket создается один раз
-      }
-
-      const socket = socketRef.current;
-
       if (!socket.connected) {
         socket.connect();
       }
 
       const handleConnect = () => {
         setIsConnected(true);
-        if (!registeredPlayers.has(currentPlayer.id)) {
-          socket.emit("register", { playerId: currentPlayer.id, fullName: currentPlayer.fullName });
-          console.log("WebSocket подключен:", { playerId: currentPlayer.id });
-          registeredPlayers.add(currentPlayer.id); // Отмечаем как зарегистрированного
-        }
+        socket.emit("register", { playerId: currentPlayer.id, fullName: currentPlayer.fullName });
+        console.log("WebSocket подключен:", { playerId: currentPlayer.id });
       };
 
       const handleDisconnect = () => {
         setIsConnected(false);
-        registeredPlayers.delete(currentPlayer.id);
         console.log("WebSocket отключен");
-
       };
 
       socket.on("connect", handleConnect);
       socket.on("disconnect", handleDisconnect);
 
-      socket.on("connect_error", (error) => {
-        console.error("Ошибка подключения:", error);
-      });
+      // Проверяем состояние подключения при монтировании
+      if (socket.connected) {
+        setIsConnected(true);
+      }
 
       return () => {
         socket.off("connect", handleConnect);
@@ -54,5 +45,6 @@ export const useSocket = (): { socket: Socket | null; isConnected: boolean } => 
     }
   }, [isAuthenticated, currentPlayer]);
 
-  return { socket: socketRef.current, isConnected };
+  return { socket: getSocket(), isConnected };
 };
+
