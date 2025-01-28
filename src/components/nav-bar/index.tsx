@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import NavButton from '../nav-button';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, selectCurrent } from '../../features/player/playerSlice';
+import { AvailabilityStatus } from '../../app/types';
 
 export const NavBar = () => {
   const currentUser = useSelector(selectCurrent);
@@ -17,10 +18,14 @@ export const NavBar = () => {
     <header>
       <img src={logo} alt="" />
       <div id="nav-bar">
-        <NavButton to={"playing"}>Игровое поле</NavButton>
+        {/* Если игрок не в игре то скрываем кнопку "Игровое поле" */}
+        {currentUser?.availability === AvailabilityStatus.IN_GAME && <NavButton to={"playing"}>Игровое поле</NavButton>}
+
         <NavButton to={"rating"}>Рейтинг</NavButton>
         <NavButton to={""}>Активные игроки</NavButton>
         <NavButton to={"history"}>История игр</NavButton>
+
+        {/* Если игрок не админ то скрываем кнопку "Список игроков" */}
         {currentUser?.isAdmin && <NavButton to={"players"}>Список игроков</NavButton>}
       </div>
       <NavLink onClick={handleLogout} id="signout" to={"/auth"}>
