@@ -12,8 +12,9 @@ import { Layout } from "./components/layout";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 import { ModalProvider } from "./components/modal-context";
-import { ProtectedRoute } from "./components/protected-route";
+import { AdminProtectedRoute } from "./components/admin-protected-route";
 import { NotificationProvider } from "./components/notification-provider";
+import { PlayingProtectedRoute } from "./components/playing-protected-route";
 
 const container = document.getElementById("root");
 const router = createBrowserRouter([
@@ -26,7 +27,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: "playing",
-        element: <PlayingField />
+        element:
+          <PlayingProtectedRoute>
+            <PlayingField />
+          </PlayingProtectedRoute>
       },
       {
         path: "rating",
@@ -43,9 +47,9 @@ const router = createBrowserRouter([
       {
         path: "players",
         element: (
-          <ProtectedRoute>
+          <AdminProtectedRoute>
             <Players />
-          </ProtectedRoute>
+          </AdminProtectedRoute>
         ),
       },
     ]
