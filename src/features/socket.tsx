@@ -5,29 +5,40 @@ import { selectCurrent, selectIsAuthenticated } from "./player/playerSlice";
 import { getSocket } from "../utils/socketSingleton";
 
 const registeredPlayers: Set<string> = new Set(); // Глобальный набор
-
 export const useSocket = (): { socket: Socket | null; isConnected: boolean } => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const currentPlayer = useSelector(selectCurrent);
   const [isConnected, setIsConnected] = useState(false);
+  const socketRef = useRef<Socket | null>(null); // Хранение WebSocket
 
   useEffect(() => {
-    const socket = getSocket();
+
 
     if (isAuthenticated && currentPlayer) {
+
+      if (!socketRef.current) {
+        socketRef.current = getSocket(); // WebSocket создается один раз
+      }
+
+      const socket = socketRef.current;
+      // Подключаемся, если это необходимо
       if (!socket.connected) {
         socket.connect();
       }
 
       const handleConnect = () => {
         setIsConnected(true);
-        socket.emit("register", { playerId: currentPlayer.id, fullName: currentPlayer.fullName });
-        console.log("WebSocket подключен:", { playerId: currentPlayer.id });
+        if (!registeredPlayers.has(currentPlayer.id)) {
+          registeredPlayers.add(currentPlayer.id);
+          socket.emit("register", { playerId: currentPlayer.id, fullName: currentPlayer.fullName });
+          console.log("WebSocket подключен:", { playerId: currentPlayer.id });
+        }
       };
 
       const handleDisconnect = () => {
         setIsConnected(false);
         console.log("WebSocket отключен");
+        registeredPlayers.delete(currentPlayer.id);
       };
 
       socket.on("connect", handleConnect);
@@ -36,8 +47,10 @@ export const useSocket = (): { socket: Socket | null; isConnected: boolean } => 
       // Проверяем состояние подключения при монтировании
       if (socket.connected) {
         setIsConnected(true);
+        handleConnect();
       }
 
+      // Чистим обработчики при размонтировании
       return () => {
         socket.off("connect", handleConnect);
         socket.off("disconnect", handleDisconnect);
@@ -45,6 +58,6 @@ export const useSocket = (): { socket: Socket | null; isConnected: boolean } => 
     }
   }, [isAuthenticated, currentPlayer]);
 
-  return { socket: getSocket(), isConnected };
+  return { socket: socketRef.current, isConnected };
 };
 
