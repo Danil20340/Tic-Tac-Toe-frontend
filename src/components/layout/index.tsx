@@ -9,6 +9,7 @@ import { useSocket } from '../../features/socket';
 import { InviteGameModal } from '../invite-game-modal';
 import { useNotifications } from '../notification-provider';
 import { removeThirdWord } from '../../utils/remove-third-word';
+import { AvailabilityStatus } from '../../app/types';
 
 export const Layout = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -29,34 +30,47 @@ export const Layout = () => {
     } else if (!current) {
       triggerGetCurrentPlayer();
     }
+    //Если статус игрока "в игре", то переносим его на игровое поле
+    if (current?.availability === AvailabilityStatus.IN_GAME) {
+      navigate("/playing");
+    }
+
+    console.log('Current Player:', current);
+    console.log('Availability:', current?.availability);
+
   }, [isAuthenticated, current, navigate, triggerGetCurrentPlayer, dispatch]);
 
 
   // Прослушивание события "invite"
   useEffect(() => {
     if (socket && isConnected) {
+      //Функция обработки события принятия игры
       const handleInvite = ({ fromPlayerId }: { fromPlayerId: string }) => {
         console.log("Приглашение получено от игрока:", fromPlayerId);
         openModal("inviteModal", { fromPlayerId });
       };
-
+      //Функция обработки события отклонения игры
       const handleRejected = async ({ fromPlayerId, message }: { fromPlayerId: string; message: { text: string; type: 'success' | 'error' | 'info' | 'warning' } }) => {
         if (isModalOpen('inviteModal') && message.type === 'error') {
           closeModal('inviteModal');
           addNotification(message.text, message.type);
         } else
-        try {
-          const { fullName } = await fetchPlayer({ id: fromPlayerId }).unwrap();
-          const filteredMessage = message.text.replace("fullName", removeThirdWord(fullName));
-          addNotification(filteredMessage, message.type);
-          console.log(`Игрок ${removeThirdWord(fullName)} отклонил приглашение`);
-        } catch (error) {
-          console.error('Ошибка загрузки игрока:', error);
-        }
+          try {
+            const { fullName } = await fetchPlayer({ id: fromPlayerId }).unwrap();
+            const filteredMessage = message.text.replace("fullName", removeThirdWord(fullName));
+            console.log(fromPlayerId, fullName);
+            addNotification(filteredMessage, message.type);
+          } catch (error) {
+            console.error('Ошибка загрузки игрока:', error);
+          }
       };
-
+      //Функция обработки события начала игры
+      const handleStartGame = () => {
+        triggerGetCurrentPlayer();
+      };
       socket.on("rejected", handleRejected);
       socket.on("invite", handleInvite);
+      socket.on("gameStart", handleStartGame);
 
       return () => {
         socket.off("invite", handleInvite);
