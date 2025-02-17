@@ -46,7 +46,6 @@ export const Chat: React.FC<props> = ({ playerName, socket, isConnected, current
 
             // Отправляем сообщение в комнату с ID игры
             socket.emit('sendMessage', { gameId: currentGameID, sender: newMessage.sender, message: newMessage.message, timestamp: newMessage.timestamp });
-            console.log({ gameId: currentGameID, sender: newMessage.sender, message: newMessage.message });
             setMessage('');
         }
     };
@@ -99,7 +98,7 @@ export const Chat: React.FC<props> = ({ playerName, socket, isConnected, current
                     messages.length === 0 
                     ? <div style={{ textAlign: 'center', fontWeight: 500 }}>Нет сообщений, начните общение</div> 
                     : messages.map((msg, index) => (
-                        <div key={msg.id} style={msg.sender === userName?.fullName ? { alignSelf: 'flex-end', borderRadius: "16px 16px 0px 16px" } : {}} className="interlocutor">
+                        <div key={index} style={msg.sender === userName?.fullName ? { alignSelf: 'flex-end', borderRadius: "16px 16px 0px 16px" } : {}} className="interlocutor">
                             <Container style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                                 <div style={msg.sender === playerName ? { color: '#E38BAC' } : { color: '#60C2AA' }} className="player-text">{removeThirdWord(msg.sender)}</div>
                                 <div className="micro-text">{msg.timestamp}</div>
