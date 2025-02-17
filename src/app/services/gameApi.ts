@@ -1,5 +1,5 @@
 import { api } from "./api";
-import { Player, Rating } from "../types";
+import { ChatMessage, Game, Player, Rating } from "../types";
 
 export const gameApi = api.injectEndpoints({
     endpoints: (builder) => ({
@@ -8,15 +8,32 @@ export const gameApi = api.injectEndpoints({
                 url: "/rating",
                 method: "GET",
             }),
+        }),
+        getCurrentGame: builder.query<Game, { id: string; }>({
+            query: ({ id }) => ({
+                url: `/game/${id}`,
+                method: "GET",
+            }),
+        }),
+        getGameMessages: builder.query<ChatMessage[], { id: string; }>({
+            query: ({ id }) => ({
+                url: `/messages/${id}`,
+                method: "GET",
+            }),
         })
+
     })
 });
 
 export const {
     useGetPlayerRatingsQuery,
-    useLazyGetPlayerRatingsQuery
+    useLazyGetPlayerRatingsQuery,
+    useGetCurrentGameQuery,
+    useLazyGetCurrentGameQuery,
+    useGetGameMessagesQuery,
+    useLazyGetGameMessagesQuery
 } = gameApi;
 
 export const {
-    endpoints: { getPlayerRatings },
+    endpoints: { getPlayerRatings, getCurrentGame, getGameMessages },
 } = gameApi;
