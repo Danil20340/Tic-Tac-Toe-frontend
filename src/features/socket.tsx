@@ -31,13 +31,11 @@ export const useSocket = (): { socket: Socket | null; isConnected: boolean } => 
         if (!registeredPlayers.has(currentPlayer.id)) {
           registeredPlayers.add(currentPlayer.id);
           socket.emit("register", { playerId: currentPlayer.id, fullName: currentPlayer.fullName });
-          console.log("WebSocket подключен:", { playerId: currentPlayer.id });
         }
       };
 
       const handleDisconnect = () => {
         setIsConnected(false);
-        console.log("WebSocket отключен");
         registeredPlayers.delete(currentPlayer.id);
       };
 
