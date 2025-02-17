@@ -35,6 +35,7 @@ export type Player = {
     updatedAt: Date;
     login: string;
     password: string;
+    winRate: string;
     isAdmin: boolean;
 
     // Relations
@@ -54,9 +55,9 @@ export type Game = {
     player2Id: string;
     winner?: Player | null;
     winnerId?: string | null;
+    winningPattern?: Array<number> | null;
     lastMoveTime: Date;
-    player1Symbol: Symbol;
-    player2Symbol: Symbol;
+    playerSymbol: Symbol;
     status: GameStatus;
     board: any; // JSON type
     nowMove: Symbol;
@@ -85,15 +86,4 @@ export type Rating = {
     losses: number;
     draw: number;
     winPercentage: number;
-}
-
-export type Invitation = {
-    id: string;
-    fromPlayer: Player;
-    fromPlayerId: string;
-    toPlayer: Player;
-    toPlayerId: string;
-    status: InviteStatus;
-    createdAt: Date;
-    updatedAt: Date;
 }
