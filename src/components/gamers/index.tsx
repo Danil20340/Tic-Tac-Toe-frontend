@@ -1,28 +1,28 @@
-import React from 'react'
-import zero from '../../assets/zero.svg'
-import cross from '../../assets/cross.svg'
-import { Text } from '../text'
-import { Container } from '../container'
-import './index.css'
+import React from 'react';
+import zero from '../../assets/zero.svg';
+import cross from '../../assets/cross.svg';
+import { Text } from '../text';
+import './index.css';
+import { Player } from '../../app/types';
 
-export const Gamers = () => {
-    return (
-        <div id="players">
-            <Text style={{ fontWeight: 700, fontSize: "24px", lineHeight: '36px' }}>Игроки</Text>
-            <div className="container">
-                <div className="zero_cross">
-                    <img style={{ width: '24px' }} src={zero} alt="" />
-                    <Text style={{ width: '-webkit-fill-available' }}>Пупкин Владлен Игоревич</Text>
-                </div>
-                <span className="micro-text">63% побед</span>
-            </div>
-            <div className="container">
-                <div className="zero_cross">
-                    <img style={{ width: '24px' }} src={cross} alt="" />
-                    <Text style={{ width: '-webkit-fill-available' }}>Плюшкина Екатерина Викторовна</Text>
-                </div>
-                <span className="micro-text">23% побед</span>
-            </div>
+type Props = {
+  player1: Player;
+  player2: Player;
+};
+
+export const Gamers: React.FC<Props> = ({ player1, player2 }) => {
+  return (
+    <div id="players">
+      <Text style={{ fontWeight: 700, fontSize: '24px', lineHeight: '36px' }}>Игроки</Text>
+      {[{ player: player1, icon: cross }, { player: player2, icon: zero }].map(({ player, icon }, index) => (
+        <div className="container" key={index}>
+          <div className="zero_cross">
+            <img style={{ width: '24px' }} src={icon} alt="" />
+            <Text style={{ width: '-webkit-fill-available' }}>{player.fullName}</Text>
+          </div>
+          <span className="micro-text">{player.winRate + '%'}</span>
         </div>
-    )
-}
+      ))}
+    </div>
+  );
+};

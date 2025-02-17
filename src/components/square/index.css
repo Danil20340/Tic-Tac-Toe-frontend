@@ -4,10 +4,17 @@
     background: #FFFFFF;
     border-radius: 12px;
     display: flex;
+    border: unset;
     justify-content: center;
     align-items: center;
     box-shadow: 0 4px 20px #2c397917;
 }
+
 .square:hover {
     background-color: #F7F7F7;
+    cursor: pointer;
+}
+.square:disabled {
+    background-color: #F7F7F7;
+    cursor: not-allowed;
 }

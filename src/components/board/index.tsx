@@ -2,16 +2,19 @@ import React from 'react'
 import { Square } from '../square';
 
 type Props = {
-    squares: Array<JSX.Element | null>;
+    board: Array<'X' | 'O' | null>;
     click: (index: number) => void;
+    nowMove: 'X' | 'O' | undefined;
+    isMakingMove: boolean;
+    winningPattern: number[];
 }
 
-export const Board: React.FC<Props> = ({ squares, click }) => {
+export const Board: React.FC<Props> = ({ board, click, isMakingMove, winningPattern, nowMove }) => {
     return (
         <div className="board">
             {
-                squares.map((square, i) => (
-                    <Square key={i} value={square} onClick={() => click(i)} />
+                board.map((square, i) => (
+                    <Square nowMove={nowMove}  isMakingMove={isMakingMove} key={i} value={square} isWinningCell={winningPattern.includes(i)} onClick={() => click(i)} />
                 ))
             }
         </div>

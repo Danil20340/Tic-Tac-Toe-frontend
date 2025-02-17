@@ -1,24 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import './index.css'
+import './index.css';
 
 const getPadTime = (time: number) => time.toString().padStart(2, '0');
 
 type TimerProps = {
-    time: number;
-    onChangeTime: (newTime: number) => void;
+    createTime: Date | null;  // Теперь передаём время начала игры
 };
 
-export const Timer: React.FC<TimerProps> = ({ time, onChangeTime }) => {
-    const minutes = getPadTime(Math.floor(time / 60));
-    const seconds = getPadTime(time % 60);
+export const Timer: React.FC<TimerProps> = ({ createTime }) => {
+    const [time, setTime] = useState(0);
 
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            onChangeTime(time + 1);
-        }, 1000);
+        if (!createTime) return;
+
+        const startTime = new Date(createTime).getTime();
+        
+        const updateTimer = () => {
+            const now = Date.now();
+            setTime(Math.floor((now - startTime) / 1000));
+        };
+
+        updateTimer(); // Сразу обновляем время
+
+        const intervalId = setInterval(updateTimer, 1000);
 
         return () => clearInterval(intervalId);
-    }, [time]);
+    }, [createTime]);
+
+    const minutes = getPadTime(Math.floor(time / 60));
+    const seconds = getPadTime(time % 60);
 
     return (
         <div className="time">
