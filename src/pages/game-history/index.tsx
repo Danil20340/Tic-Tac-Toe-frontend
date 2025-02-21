@@ -6,21 +6,22 @@ import { Container } from '../../components/container'
 import { Text } from '../../components/text'
 import { Row } from '../../components/row'
 import { Cell } from '../../components/cell'
+import { useGetGamesTableQuery } from '../../app/services/gameApi'
+import { formatToClientDate } from '../../utils/format-to-client-date'
+import { Game, Player } from '../../app/types'
 
 export const GameHistory = () => {
-  const historyList = [
-    { win: "win", player1: 'Терещенко У. Р.', player2: 'Многогрешный П. В.', date: "12 февраля 2022", time: "43 мин 13 сек" },
-    { win: "lose", player1: 'Горбачёв А. Д.', player2: 'Многогрешный П. В.', date: "12 февраля 2022", time: "43 мин 13 сек" },
-    { win: "win", player1: 'Константинов В. Н.', player2: 'Сасько Ц. А.', date: "12 февраля 2022", time: "43 мин 13 сек" },
-    { win: "lose", player1: 'Никифорова Б. А.', player2: 'Горбачёв А. Д.', date: "12 февраля 2022", time: "43 мин 13 сек" },
-    { win: "lose", player1: 'Кулишенко К. И.', player2: 'Вишняков Ч. М.', date: "12 февраля 2022", time: "43 мин 13 сек" },
-    { win: "lose", player1: 'Гриневска Д. Б.', player2: 'Кудрявцев Э. В.', date: "12 февраля 2022", time: "43 мин 13 сек" },
-    { win: "win", player1: 'Нестеров Х. А.', player2: 'Исаева О. А.', date: "12 февраля 2022", time: "43 мин 13 сек" },
-    { win: "lose", player1: 'Исаева О. А.', player2: 'Кулишенко К. И.', date: "12 февраля 2022", time: "43 мин 13 сек" },
-    { win: "lose", player1: 'Коновалова В. В.', player2: 'Терещенко У. Р.', date: "12 февраля 2022", time: "43 мин 13 сек" },
-    { win: "win", player1: 'Казаков Х. Е.', player2: 'Овчаренко Б. М.', date: "12 февраля 2022", time: "43 мин 13 сек" },
-    { win: "lose", player1: 'Сасько Ц. А.', player2: 'Никифорова Б. А.', date: "12 февраля 2022", time: "43 мин 13 сек" }
-  ]
+  const { data } = useGetGamesTableQuery();
+  function formatFullName(fullName: string) {
+    const nameParts = fullName.split(' ');
+    if (nameParts.length < 2) return fullName; // Если ФИО неполное, возвращаем как есть
+
+    const lastName = nameParts[0];
+    const firstName = nameParts[1]?.charAt(0) + '.';
+    const middleName = nameParts[2] ? nameParts[2].charAt(0) + '.' : '';
+
+    return `${lastName} ${firstName} ${middleName}`.trim();
+  }
 
   return (
     <Container style={{ maxWidth: '1074px' }} className="rating-players">
@@ -31,30 +32,39 @@ export const GameHistory = () => {
           <Cell style={{ width: '160px' }}>Дата</Cell>
           <Cell style={{ width: '140px' }}>Время игры</Cell>
         </Row>
-        {historyList.map(item =>
-          <Row>
-            <Cell style={{maxWidth: '540px', width: "-webkit-fill-available", alignItems: 'center', gap: "12px" }}>
-              <Container style={{maxWidth: '220px', width: '-webkit-fill-available', gap: '8px', justifyContent: 'flex-start' }}>
-                {item.win === "win" ?
-                  <>
-                    <img src={zero} alt="" />
-                    {item.player1}
-                    <img src={cup} alt="" />
-                  </> :
-                  <>
-                    <img className="his-img" src={zero} alt="" />{item.player1}
-                  </>
-                }
-              </Container>
-              <Text style={{ fontWeight: '700' }}>против</Text>
-              {item.win === "win" ?
-                <><img className="his-img" src={cross} alt="" />{item.player2}</> :
-                <><img className="his-img" src={cross} alt="" />{item.player2}<img src={cup} alt="" /></>}
-            </Cell>
-            <Cell style={{ width: '160px' }}>{item.date}</Cell>
-            <Cell style={{ width: '140px' }}>{item.time}</Cell>
-          </Row>
-        )}
+        {
+          data && data !== undefined && data.length > 0
+            ? data.map(({
+              id,
+              player1,
+              player2,
+              duration,
+              winner,
+              createTime,
+            }) =>
+              <Row key={id}>
+                <Cell style={{ maxWidth: '540px', width: "-webkit-fill-available", alignItems: 'center', gap: "12px" }}>
+                  <Container style={{ maxWidth: '220px', width: '-webkit-fill-available', gap: '8px', justifyContent: 'flex-start' }}>
+                    {winner === player1 ?
+                      <>
+                        <img src={zero} alt="" />
+                        {formatFullName(player1)}
+                        <img src={cup} alt="" />
+                      </> :
+                      <>
+                        <img className="his-img" src={zero} alt="" />{formatFullName(player1)}
+                      </>
+                    }
+                  </Container>
+                  <Text style={{ fontWeight: '700' }}>против</Text>
+                  {winner === player2 ?
+                    <><img className="his-img" src={cross} alt="" />{formatFullName(player2)}<img src={cup} alt="" /></> :
+                    <><img className="his-img" src={cross} alt="" />{formatFullName(player2)}</>}
+                </Cell>
+                <Cell style={{ width: '160px' }}>{formatToClientDate(createTime)}</Cell>
+                <Cell style={{ width: '140px' }}>{duration}</Cell>
+              </Row>
+            ) : null}
       </Container>
     </Container>
   )
