@@ -20,6 +20,18 @@ export const gameApi = api.injectEndpoints({
                 url: `/messages/${id}`,
                 method: "GET",
             }),
+        }),
+        getGamesTable: builder.query<{id: string, 
+            player1: Player['fullName'], 
+            player2: Player['fullName']
+            duration: string,
+            winner: Player['fullName'],
+            createTime: Date
+        }[], void>({
+            query: () => ({
+                url: "/games",
+                method: "GET",
+            }),
         })
 
     })
@@ -31,9 +43,10 @@ export const {
     useGetCurrentGameQuery,
     useLazyGetCurrentGameQuery,
     useGetGameMessagesQuery,
-    useLazyGetGameMessagesQuery
+    useLazyGetGameMessagesQuery,
+    useGetGamesTableQuery
 } = gameApi;
 
 export const {
-    endpoints: { getPlayerRatings, getCurrentGame, getGameMessages },
+    endpoints: { getPlayerRatings, getCurrentGame, getGameMessages, getGamesTable },
 } = gameApi;
