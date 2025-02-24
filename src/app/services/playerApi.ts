@@ -27,11 +27,11 @@ export const playerApi = api.injectEndpoints({
       }),
     }),
     updatePlayer: builder.mutation<
-      Player,
-      { playerData: FormData; id: string }
+      { fullName: string; age: number; gender: string },
+      {id: string; login: string; password: string; fullname: string; age: number; gender: string }
     >({
-      query: ({ playerData, id }) => ({
-        url: `/player/${id}`,
+      query: (playerData) => ({
+        url: `/players`,
         method: "PATCH",
         body: playerData,
       }),

@@ -6,7 +6,7 @@ import { Button } from '../button'
 import { Text } from '../text'
 import { AuthInput } from '../auth-input'
 import { useForm } from 'react-hook-form'
-import { useGetPlayerByIdQuery, useRegisterMutation } from '../../app/services/playerApi'
+import { useGetPlayerByIdQuery, useRegisterMutation, useUpdatePlayerMutation } from '../../app/services/playerApi'
 import { hasErrorField } from '../../utils/has-error-field'
 import RadioGroup from '../radio-group'
 import { useModal } from '../modal-context'
@@ -33,6 +33,7 @@ export const AddPlayerModal: React.FC<Props> = ({ onPlayerAdded, modalState, sel
         control,
         formState: { isValid, errors },
         reset,
+        setValue
     } = useForm<AddPlayerModalProps>({
         mode: 'onChange',
         reValidateMode: 'onBlur',
@@ -42,7 +43,7 @@ export const AddPlayerModal: React.FC<Props> = ({ onPlayerAdded, modalState, sel
             fullname: '',
             age: 1,
             gender: '',
-        },
+        }
     });
 
     useEffect(() => {
@@ -64,11 +65,24 @@ export const AddPlayerModal: React.FC<Props> = ({ onPlayerAdded, modalState, sel
             });
         }
     }, [modalState, player]);
+    // Динамически обновляем правила валидации при изменении режима
+    useEffect(() => {
+        if (modalState === 'ADD') {
+            setValue('login', '', { shouldValidate: true });
+            setValue('password', '', { shouldValidate: true });
+        }
+    }, [modalState, setValue]);
     const [register, { isLoading }] = useRegisterMutation();
+    const [update, { isLoading: updateLoading }] = useUpdatePlayerMutation();
     const [error, setError] = useState('');
     const onSubmit = async (data: AddPlayerModalProps) => {
         try {
-            await register(data).unwrap();
+            if (modalState === 'EDIT' && selectPlayer) {
+                console.log({ id: selectPlayer, ...data })
+                await update({ id: selectPlayer, ...data }).unwrap();
+            } else {
+                await register(data).unwrap();
+            }
             closeModal("playerModal");
             onPlayerAdded();
             reset();
@@ -88,7 +102,7 @@ export const AddPlayerModal: React.FC<Props> = ({ onPlayerAdded, modalState, sel
                 control={control}
                 name="login"
                 type="login"
-                required={selectPlayer === 'EDIT' ? 'Обязательное поле' : undefined}
+                rules={{ required: modalState === 'ADD' ? 'Обязательное поле' : undefined }}
                 placeholder="Логин"
                 style={errors.login || error ? { border: '1px solid red' } : {}}
                 onFieldChange={() => setError('')}
@@ -98,19 +112,19 @@ export const AddPlayerModal: React.FC<Props> = ({ onPlayerAdded, modalState, sel
                 control={control}
                 name="password"
                 type="password"
-                required={selectPlayer === 'EDIT' ? 'Обязательное поле' : undefined}
+                rules={{ required: modalState === 'ADD' ? 'Обязательное поле' : undefined }}
                 placeholder="Пароль"
                 style={errors.password || error ? { border: '1px solid red' } : {}}
                 errorMessage={error}
                 onFieldChange={() => setError('')}
             />
             <Text style={{ fontWeight: 500, marginBottom: '-28px', display: 'flex', justifyContent: 'start' }}>ФИО</Text>
-            <AuthInput name="fullname" type="text" required='Обязательное поле' control={control} placeholder="Иванов Иван Иванович" />
+            <AuthInput name="fullname" type="text" rules={{ required: modalState === 'ADD' ? 'Обязательное поле' : undefined }} control={control} placeholder="Иванов Иван Иванович" />
 
             <div style={{ display: 'flex', gap: '40px', alignSelf: 'flex-start' }}>
                 <div className="input-set">
                     <Text style={{ fontWeight: 500, display: 'flex', justifyContent: 'start' }}>Возраст</Text>
-                    <AuthInput name="age" type='number' required='Обязательное поле' control={control} style={{ width: '85px' }} placeholder="0" />
+                    <AuthInput name="age" type='number' rules={{ required: modalState === 'ADD' ? 'Обязательное поле' : undefined }} control={control} style={{ width: '85px' }} placeholder="0" />
                 </div>
                 <div className="input-set">
                     <Text style={{ fontWeight: 500, display: 'flex', justifyContent: 'start' }}>Пол</Text>
@@ -126,7 +140,7 @@ export const AddPlayerModal: React.FC<Props> = ({ onPlayerAdded, modalState, sel
                     />
                 </div>
             </div>
-            <Button disabled={isLoading || !isValid} onClick={handleSubmit(onSubmit)}> {modalState === 'EDIT' ? "Редактировать" : "Добавить"}</Button >
+            <Button disabled={isLoading || !isValid || updateLoading} onClick={handleSubmit(onSubmit)}> {modalState === 'EDIT' ? "Редактировать" : "Добавить"}</Button >
         </Modal >
     );
 }
