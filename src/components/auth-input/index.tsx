@@ -1,32 +1,30 @@
 import React, { CSSProperties } from 'react'
-import { Control, useController } from 'react-hook-form';
+import { Control, useController, RegisterOptions } from 'react-hook-form';
 import '../input/index.css'
 
 type Props = {
     name: string;
     placeholder?: string;
     type?: string;
-    control: Control<any>
-    required?: string;
+    control: Control<any>;
+    rules?: RegisterOptions; // <-- Передаем правила валидации
     styleAuth?: CSSProperties;
     style?: CSSProperties;
     errorMessage?: string;
     onFieldChange?: () => void;
 }
 
-export const AuthInput: React.FC<Props> = (
-    {
-        name,
-        placeholder,
-        type,
-        control,
-        required = '',
-        styleAuth,
-        style,
-        errorMessage,
-        onFieldChange,
-    }
-) => {
+export const AuthInput: React.FC<Props> = ({
+    name,
+    placeholder,
+    type,
+    control,
+    rules, 
+    styleAuth,
+    style,
+    errorMessage,
+    onFieldChange,
+}) => {
     const {
         field,
         fieldState: { invalid },
@@ -36,14 +34,14 @@ export const AuthInput: React.FC<Props> = (
         control,
         defaultValue: '',
         rules: {
-            required,
+            ...rules, // <-- Используем переданные правила валидации
             validate: (value) => {
-                if (type !== 'number') return true; // Валидация не нужна, если тип не "number"
-                const num = Number(value); // Преобразуем значение в число
+                if (type !== 'number') return true;
+                const num = Number(value);
                 if (isNaN(num)) return 'Значение должно быть числом';
                 if (!Number.isInteger(num)) return 'Число должно быть целым';
                 if (num <= 0) return 'Число должно быть больше нуля';
-                return true; // Валидация успешна
+                return true;
             }
         }
     });
@@ -60,8 +58,8 @@ export const AuthInput: React.FC<Props> = (
                 name={field.name}
                 onBlur={field.onBlur}
                 onChange={(e) => {
-                    field.onChange(e); // Вызываем react-hook-form обработчик
-                    onFieldChange?.(); // Сбрасываем ошибку, если передан onFieldChange
+                    field.onChange(e);
+                    onFieldChange?.();
                 }}
             />
             {(errors[name]?.message || errorMessage) && (
@@ -70,6 +68,5 @@ export const AuthInput: React.FC<Props> = (
                 </div>
             )}
         </div>
-
-    )
-}
+    );
+};
