@@ -25,7 +25,7 @@ export const Layout = () => {
 
   // Проверка авторизации и получение текущего пользователя
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated || current?.status === 'BLOCKED') {
       dispatch(logout());
       navigate("/auth");
     } else if (!current) {
