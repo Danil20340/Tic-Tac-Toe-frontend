@@ -10,3 +10,16 @@
     cursor: pointer;
     border-radius: 12px !important;
 }
+@media (max-width: 1100px) {
+    .selectPlayer, .playerField {
+        min-width: 100%;
+        width: auto;
+    }
+    .playerHeader {
+        position: fixed;
+        margin-right: 20px;
+    }
+    .playerBody {
+        margin-top: 64px;
+    }
+}

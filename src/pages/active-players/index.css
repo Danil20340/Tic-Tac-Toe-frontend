@@ -8,3 +8,10 @@
     box-shadow: 0 4px 20px rgba(44, 57, 121, 0.09);
     border-radius: 40px;
 }
+
+@media (max-width: 768px) {
+    .active-players {
+        box-shadow: none;
+        padding: 24px 12px;
+    }
+}

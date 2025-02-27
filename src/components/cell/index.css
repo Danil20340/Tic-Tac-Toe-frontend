@@ -1,5 +1,12 @@
 .cell-common{
     display: flex;
     padding: 8px;
-    width: 108px;
+    min-width: 108px;
+    color: #373745;
+}
+@media (max-width: 768px) {
+    .cell-common {
+        font-size: 14px;
+        padding: 0;
+    }
 }

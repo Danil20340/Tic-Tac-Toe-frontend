@@ -44,18 +44,18 @@ export const Players = () => {
   return (
     <>
       <Container style={{ maxWidth: '1416px' }} className="rating-players">
-        <Container style={{ justifyContent: 'space-between' }}>
+        <Container className='playerHeader' style={{ justifyContent: 'space-between' }}>
           <Text style={{ fontWeight: 700, fontSize: "24px", lineHeight: '36px' }}>Список игроков</Text>
           <Button onClick={() => { openModal('playerModal'); setModalState(selectPlayer ? 'EDIT' : 'ADD') }}>{selectPlayer ? 'Редактировать игрока' : 'Добавить игрока'}</Button>
         </Container>
-        <Container style={{ flexDirection: "column", alignItems: 'flex-start' }}>
+        <Container className='playerBody' style={{ flexDirection: "column", alignItems: 'flex-start' }}>
           <Row>
-            <Cell style={{ width: '380px' }}>ФИО</Cell>
-            <Cell>Возраст</Cell>
-            <Cell style={{ width: '46px' }}>Пол</Cell>
-            <Cell style={{ width: '155px' }}>Статус</Cell>
-            <Cell style={{ width: '144px' }}>Создан</Cell>
-            <Cell style={{ width: '144px' }} >Изменен</Cell>
+            <Cell style={{ minWidth: '332px' }}>ФИО</Cell>
+            <Cell style={{ minWidth: '80px' }}>Возраст</Cell>
+            <Cell style={{ minWidth: '46px' }}>Пол</Cell>
+            <Cell style={{ minWidth: '110px' }}>Статус</Cell>
+            <Cell style={{ minWidth: '144px' }}>Создан</Cell>
+            <Cell style={{ minWidth: '144px' }} >Изменен</Cell>
             <Cell style={{ width: '174px' }}></Cell>
           </Row>
           {
@@ -71,10 +71,10 @@ export const Players = () => {
               }) => (
                 <Row key={id} className={id === selectPlayer ? 'selectPlayer' : 'playerField'} style={{ alignItems: 'center', height: '64px', paddingRight: '8px' }}
                   onClick={() => { selectPlayer === id ? setSelectPlayer('') : setSelectPlayer(id) }}>
-                  <Cell style={{ width: "380px" }}>{fullName}</Cell>
-                  <Cell>{age}</Cell>
+                  <Cell style={{ minWidth: '332px' }}>{fullName}</Cell>
+                  <Cell style={{ minWidth: '80px' }}>{age}</Cell>
                   {gender === "FEMALE" ? (
-                    <Cell style={{ width: '46px' }}>
+                    <Cell style={{ minWidth: '46px' }}>
                       <img src={woman} alt="" />
                     </Cell>
                   ) : (
@@ -83,12 +83,12 @@ export const Players = () => {
                     </Cell>
                   )}
                   {status === "BLOCKED" ? (
-                    <Status style={{ width: '144px' }} status="isBlock" />
+                    <Status style={{ minWidth: '100px' }} status="isBlock" />
                   ) : (
-                    <Status style={{ width: '144px' }} status="isActive" />
+                    <Status style={{ minWidth: '100px' }} status="isActive" />
                   )}
-                  <Cell style={{ width: '144px' }}>{formatToClientDate(createdAt)}</Cell>
-                  <Cell style={{ width: '144px' }}>{formatToClientDate(updatedAt)}</Cell>
+                  <Cell style={{ minWidth: '144px' }}>{formatToClientDate(createdAt)}</Cell>
+                  <Cell style={{ minWidth: '144px' }}>{formatToClientDate(updatedAt)}</Cell>
                   {status === "BLOCKED" ? (
                     <Button
                       onClick={() => handleClick(id)}
@@ -100,7 +100,7 @@ export const Players = () => {
                   ) : (
                     <Button
                       onClick={() => handleClick(id)}
-                      style={{ width: '174px' }}
+                      style={{ minWidth: '174px' }}
                       backgroundColor="#F7F7F7"
                     >
                       <img src={block} alt="" /> Заблокировать

@@ -76,11 +76,11 @@ export const ActivePlayers = () => {
     <>
       <Container className="active-players">
         <Container style={{ justifyContent: "space-between" }}>
-          <Text style={{ fontWeight: 700, fontSize: "24px", lineHeight: "36px" }}>
+          <Text style={{ fontWeight: 700, lineHeight: "36px" }}>
             Активные игроки
           </Text>
           <Container style={{ maxWidth: "200px", alignItems: "center" }}>
-            <Text style={{ marginRight: "8px" }}>Только свободные</Text>
+            <Text style={{ marginRight: "8px", fontSize: "16px" }}>Только свободные</Text>
             <Container style={{ maxWidth: "35px" }}>
               <Switch isChecked={showAvailableOnly} onChange={handleSwitchChange} />
             </Container>
@@ -91,7 +91,7 @@ export const ActivePlayers = () => {
             filteredData.map(({ id, fullName, availability }) => (
               <Row
                 key={id}
-                style={{ boxShadow: "none", padding: "12px 0px", gap: "16px" }}
+                style={{ boxShadow: "none", padding: "12px 0px", gap: "16px", alignItems: "center" }}
               >
                 <Cell style={{ width: "300px" }}>{fullName}</Cell>
                 {availability === "AVAILABLE" ? <Status /> : <Status status="isPlay" />}

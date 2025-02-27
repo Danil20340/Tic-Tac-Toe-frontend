@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react'
-
+import './index.css'
 type Props = {
     style?: CSSProperties;
     children: React.ReactNode;

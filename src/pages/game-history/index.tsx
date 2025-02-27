@@ -25,11 +25,11 @@ export const GameHistory = () => {
 
   return (
     <Container style={{ maxWidth: '1074px' }} className="rating-players">
-      <Text style={{ fontWeight: 700, fontSize: "24px", lineHeight: '36px' }}>История игр</Text>
-      <Container style={{ flexDirection: "column", alignItems: 'flex-start' }}>
+      <Text style={{ fontWeight: 700, fontSize: "24px", lineHeight: '36px', position: 'fixed' }}>История игр</Text>
+      <Container style={{ flexDirection: "column", alignItems: 'flex-start', minWidth: "900px", marginTop: "64px" }}>
         <Row style={{ fontWeight: "600" }}>
           <Cell style={{ width: "540px" }}>Игроки</Cell>
-          <Cell style={{ width: '160px' }}>Дата</Cell>
+          <Cell style={{ minWidth: '160px' }}>Дата</Cell>
           <Cell style={{ width: '140px' }}>Время игры</Cell>
         </Row>
         {
@@ -43,7 +43,7 @@ export const GameHistory = () => {
               createTime,
             }) =>
               <Row key={id}>
-                <Cell style={{ maxWidth: '540px', width: "-webkit-fill-available", alignItems: 'center', gap: "12px" }}>
+                <Cell className='game-history' style={{ maxWidth: '540px', width: "-webkit-fill-available", alignItems: 'center', gap: "12px" }}>
                   <Container style={{ maxWidth: '220px', width: '-webkit-fill-available', gap: '8px', justifyContent: 'flex-start' }}>
                     {winner === player1 ?
                       <>
@@ -56,12 +56,12 @@ export const GameHistory = () => {
                       </>
                     }
                   </Container>
-                  <Text style={{ fontWeight: '700' }}>против</Text>
+                  <Text style={{ fontWeight: '700', fontSize: '16px' }}>против</Text>
                   {winner === player2 ?
                     <><img className="his-img" src={cross} alt="" />{formatFullName(player2)}<img src={cup} alt="" /></> :
                     <><img className="his-img" src={cross} alt="" />{formatFullName(player2)}</>}
                 </Cell>
-                <Cell style={{ width: '160px' }}>{formatToClientDate(createTime)}</Cell>
+                <Cell style={{ minWidth: '160px' }}>{formatToClientDate(createTime)}</Cell>
                 <Cell style={{ width: '140px' }}>{duration}</Cell>
               </Row>
             ) : null}
