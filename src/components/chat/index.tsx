@@ -28,7 +28,7 @@ export const Chat: React.FC<props> = ({ playerName, socket, isConnected, current
     const userName = useSelector(selectCurrent);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
-
+    const [isScrollable, setIsScrollable] = useState(false);
     const chatRef = useRef<HTMLDivElement>(null);
     
     const formatTime = (utcString: string) => {
@@ -89,11 +89,48 @@ export const Chat: React.FC<props> = ({ playerName, socket, isConnected, current
         if (chatRef.current) {
             chatRef.current.scrollTop = chatRef.current.scrollHeight;
         }
-    }, [messages]); // Запускаем, когда изменяются сообщения
+    }, [messages]); 
+    const handleScroll = () => {
+        if (!chatRef.current) return;
+    
+        const element = chatRef.current;
+        const isScrollable = element.scrollHeight > element.clientHeight;
+    
+        setIsScrollable(isScrollable);
+    
+        const atTop = element.scrollTop === 0;
+        const atBottom = element.scrollTop + element.clientHeight >= element.scrollHeight - 1;
+    
+        if (atTop) {
+            element.classList.add('no-fade-top');
+            element.classList.remove('no-fade-bottom');
+        } else if (atBottom) {
+            element.classList.add('no-fade-bottom');
+            element.classList.remove('no-fade-top');
+        } else {
+            element.classList.remove('no-fade-top', 'no-fade-bottom');
+        }
+    };
+    
+    
+    useEffect(() => {
+        if (chatRef.current) {
+            const element = chatRef.current;
+    
+            handleScroll(); // Запускаем на старте чтобы сразу корректно применились классы
+            element.addEventListener('scroll', handleScroll);
+            
+            return () => {
+                element.removeEventListener('scroll', handleScroll);
+            };
+        }
+    }, [messages]);
+    
+    // Запускаем, когда изменяются сообщения
 
     return (
         <div id="all_chat">
-            <Container ref={chatRef} className='chat-container scrollbar'>
+            <Container ref={chatRef} className={`chat-container scrollbar ${isScrollable ? 'scrollable' : ''}`}>
                 {
                     messages.length === 0 
                     ? <div style={{ textAlign: 'center', fontWeight: 500 }}>Нет сообщений, начните общение</div> 
