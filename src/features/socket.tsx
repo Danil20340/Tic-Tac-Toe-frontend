@@ -1,12 +1,16 @@
 import { io, Socket } from "socket.io-client";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectCurrent, selectIsAuthenticated } from "./player/playerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectCurrent, selectIsAuthenticated, selectToken } from "./player/playerSlice";
 import { getSocket } from "../utils/socketSingleton";
+import { useNavigate } from "react-router-dom";
 
 const registeredPlayers: Set<string> = new Set(); // Глобальный набор
 export const useSocket = (): { socket: Socket | null; isConnected: boolean } => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const token = useSelector(selectToken);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const currentPlayer = useSelector(selectCurrent);
   const [isConnected, setIsConnected] = useState(false);
   const socketRef = useRef<Socket | null>(null); // Хранение WebSocket
@@ -30,7 +34,7 @@ export const useSocket = (): { socket: Socket | null; isConnected: boolean } => 
         setIsConnected(true);
         if (!registeredPlayers.has(currentPlayer.id)) {
           registeredPlayers.add(currentPlayer.id);
-          socket.emit("register", { playerId: currentPlayer.id, fullName: currentPlayer.fullName });
+          socket.emit("register", { playerId: currentPlayer.id, token: token });
         }
       };
 
@@ -38,8 +42,12 @@ export const useSocket = (): { socket: Socket | null; isConnected: boolean } => 
         setIsConnected(false);
         registeredPlayers.delete(currentPlayer.id);
       };
-
+      const handleTokenError = () => {
+        dispatch(logout());
+        navigate('/auth')
+      };
       socket.on("connect", handleConnect);
+      socket.on("tokenError", handleTokenError);
       socket.on("disconnect", handleDisconnect);
 
       // Проверяем состояние подключения при монтировании

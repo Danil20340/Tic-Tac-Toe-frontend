@@ -49,6 +49,7 @@ export const { logout } = slice.actions;
 // Селекторы
 export const selectIsAuthenticated = (state: RootState) => state.player.isAuthenticated;
 export const selectCurrent = (state: RootState) => state.player.current;
+export const selectToken = (state: RootState) => state.player.token;
 
 // Комбинированный селектор для оптимизации
 export const selectPlayerSocketState = createSelector(
