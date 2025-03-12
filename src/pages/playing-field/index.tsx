@@ -36,7 +36,6 @@ export const PlayingField = () => {
 
     // Слушаем "moveMade" от сервера
     socket.on("moveMade", (gameData) => {
-      // console.log("Новое состояние игры:", gameData);
       setGameData(gameData);
       if (gameData.status === "FINISHED" || gameData.status === "DRAW") {
         openModal("endGameModal", gameData);
@@ -81,7 +80,7 @@ export const PlayingField = () => {
       <EndGameModal />
       <Container className='common'>
         <Gamers player1={data.player1} player2={data.player2} />
-        <Container style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', gap: '40px', backgroundColor: '#f6f6f6' }}>
+        <Container style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', gap: '40px', backgroundColor: '#f6f6f6', maxWidth: '663px' }}>
           <Timer createTime={(gameData?.status === 'FINISHED' || gameData?.status === 'DRAW') ? null : data.createTime} />
           <Board isMakingMove={data.playerSymbol !== gameData?.nowMove || (gameData?.status === 'FINISHED' || gameData?.status === 'DRAW')} nowMove={gameData?.nowMove} board={gameData?.board ?? []} click={handleClick} winningPattern={gameData?.winningPattern ?? []} />
           <Step nowMove={gameData?.nowMove} player={nowMovePlayer} />

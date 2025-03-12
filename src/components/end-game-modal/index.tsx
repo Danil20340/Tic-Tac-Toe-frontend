@@ -15,7 +15,6 @@ export const EndGameModal = () => {
     const { isModalOpen, closeModal, getModalData } = useModal();
     const [fetchPlayer, { data: player }] = useLazyGetPlayerByIdQuery();
     const gameData = getModalData('endGameModal');
-    // console.log("Данные игры", gameData);
     const navigate = useNavigate();
 
     React.useEffect(() => {

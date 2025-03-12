@@ -78,7 +78,6 @@ export const AddPlayerModal: React.FC<Props> = ({ onPlayerAdded, modalState, sel
     const onSubmit = async (data: AddPlayerModalProps) => {
         try {
             if (modalState === 'EDIT' && selectPlayer) {
-                console.log({ id: selectPlayer, ...data })
                 await update({ id: selectPlayer, ...data }).unwrap();
             } else {
                 await register(data).unwrap();
