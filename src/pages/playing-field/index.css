@@ -4,6 +4,7 @@
     display: flex;
     flex-flow: row;
     justify-content: space-between;
+    gap: 40px;
     background-color: #f6f6f6;
 }
 
@@ -36,4 +37,10 @@
     flex-wrap: wrap;
     align-content: flex-start;
     gap: 4px;
+}
+
+@media (max-width: 1550px) {
+    .board{
+        width: 458px;
+    }
 }

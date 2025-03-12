@@ -18,3 +18,9 @@
     background-color: #F7F7F7;
     cursor: not-allowed;
 }
+@media (max-width: 1550px) {
+    .square{
+        width: 150px;
+        height: 150px;
+    }
+}
