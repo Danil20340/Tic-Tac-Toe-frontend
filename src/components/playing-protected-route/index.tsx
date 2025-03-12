@@ -7,7 +7,7 @@ import { AvailabilityStatus } from "../../app/types";
 export const PlayingProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const current = useSelector(selectCurrent);
 
-  // Проверяем, является ли пользователь админом
+  // Проверяем, находится ли игрок в игре
   if (current?.availability === AvailabilityStatus.AVAILABLE) {
     return <Navigate to="/" replace />; // Редирект на главную страницу
   }

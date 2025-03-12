@@ -44,11 +44,11 @@ export const Players = () => {
   return (
     <>
       <Container style={{ maxWidth: '1416px' }} className="rating-players">
-        <Container className='playerHeader' style={{ justifyContent: 'space-between' }}>
+        <Container style={{ justifyContent: 'space-between' }}>
           <Text style={{ fontWeight: 700, fontSize: "24px", lineHeight: '36px' }}>Список игроков</Text>
           <Button onClick={() => { openModal('playerModal'); setModalState(selectPlayer ? 'EDIT' : 'ADD') }}>{selectPlayer ? 'Редактировать игрока' : 'Добавить игрока'}</Button>
         </Container>
-        <Container className='playerBody' style={{ flexDirection: "column", alignItems: 'flex-start' }}>
+        <Container style={{ flexDirection: "column", alignItems: 'flex-start' }}>
           <Row>
             <Cell style={{ minWidth: '332px' }}>ФИО</Cell>
             <Cell style={{ minWidth: '80px' }}>Возраст</Cell>

@@ -18,7 +18,7 @@ export const Gamers: React.FC<Props> = ({ player1, player2 }) => {
         <div className="container" key={index}>
           <div className="zero_cross">
             <img style={{ width: '24px' }} src={icon} alt="" />
-            <Text style={{ width: '-webkit-fill-available' }}>{player.fullName}</Text>
+            <Text style={{ width: '-webkit-fill-available', textAlign: 'left' }}>{player.fullName}</Text>
           </div>
           <span className="micro-text">{player.winRate + '%'}</span>
         </div>

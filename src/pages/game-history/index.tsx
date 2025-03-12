@@ -25,8 +25,8 @@ export const GameHistory = () => {
 
   return (
     <Container style={{ maxWidth: '1074px' }} className="rating-players">
-      <Text style={{ fontWeight: 700, fontSize: "24px", lineHeight: '36px', position: 'fixed' }}>История игр</Text>
-      <Container style={{ flexDirection: "column", alignItems: 'flex-start', minWidth: "900px", marginTop: "64px" }}>
+      <Text style={{ fontWeight: 700, fontSize: "24px", lineHeight: '36px'}}>История игр</Text>
+      <Container style={{ flexDirection: "column", alignItems: 'flex-start', minWidth: "900px"}}>
         <Row style={{ fontWeight: "600" }}>
           <Cell style={{ width: "540px" }}>Игроки</Cell>
           <Cell style={{ minWidth: '160px' }}>Дата</Cell>

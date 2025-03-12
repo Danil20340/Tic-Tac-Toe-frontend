@@ -3,6 +3,7 @@
     align-self: center;
     flex-direction: column;
     align-items: flex-start;
+    gap: 24px;
     padding: 32px;
     max-width: 1026px;
     box-shadow: 0 4px 20px rgba(44, 57, 121, 0.09);

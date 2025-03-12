@@ -15,11 +15,4 @@
         min-width: 100%;
         width: auto;
     }
-    .playerHeader {
-        position: fixed;
-        margin-right: 20px;
-    }
-    .playerBody {
-        margin-top: 64px;
-    }
 }

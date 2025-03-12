@@ -9,8 +9,8 @@ export const Rating = () => {
   const { data } = useGetPlayerRatingsQuery();
   return (
     <Container className="rating-players">
-      <Text style={{ fontWeight: 700, lineHeight: '36px', position: 'fixed' }}>Рейтинг игроков</Text>
-      <Container className='table-wrapper' style={{ flexDirection: "column", alignItems: 'flex-start', minWidth: "980px", marginTop: "64px" }}>
+      <Text style={{ fontWeight: 700, lineHeight: '36px' }}>Рейтинг игроков</Text>
+      <Container className='table-wrapper' style={{ flexDirection: "column", alignItems: 'flex-start', minWidth: "980px" }}>
         <Row style={{ fontWeight: "600" }}>
           <Cell style={{ minWidth: "320px" }}>ФИО</Cell>
           <Cell>Всего игр</Cell>
