@@ -30,13 +30,14 @@ export const Chat: React.FC<props> = ({ playerName, socket, isConnected, current
     const [messages, setMessages] = useState<Message[]>([]);
     const [isScrollable, setIsScrollable] = useState(false);
     const chatRef = useRef<HTMLDivElement>(null);
-    
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
     const formatTime = (utcString: string) => {
         return new Date(utcString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
 
     const handleSendMessage = () => {
-        if (!socket || !isConnected) return;
+        if (!socket || !isConnected || isButtonDisabled) return;
         if (message.trim()) {
             const newMessage = {
                 sender: userName?.fullName,
@@ -47,6 +48,12 @@ export const Chat: React.FC<props> = ({ playerName, socket, isConnected, current
             // Отправляем сообщение в комнату с ID игры
             socket.emit('sendMessage', { gameId: currentGameID, sender: newMessage.sender, message: newMessage.message, timestamp: newMessage.timestamp });
             setMessage('');
+
+            // Блокируем кнопку на 2 секунды
+            setIsButtonDisabled(true);
+            setTimeout(() => {
+                setIsButtonDisabled(false);
+            }, 2000);
         }
     };
 
@@ -87,20 +94,27 @@ export const Chat: React.FC<props> = ({ playerName, socket, isConnected, current
 
     useEffect(() => {
         if (chatRef.current) {
-            chatRef.current.scrollTop = chatRef.current.scrollHeight;
+            if (window.innerWidth <= 768) {
+                // 📱 На мобильных прокручиваем вверх
+                chatRef.current.scrollTop = 0;
+            } else {
+                // 💻 На десктопах прокручиваем вниз
+                chatRef.current.scrollTop = chatRef.current.scrollHeight;
+            }
         }
-    }, [messages]); 
+    }, [messages]);
+
     const handleScroll = () => {
         if (!chatRef.current) return;
-    
+
         const element = chatRef.current;
         const isScrollable = element.scrollHeight > element.clientHeight;
-    
+
         setIsScrollable(isScrollable);
-    
+
         const atTop = element.scrollTop === 0;
         const atBottom = element.scrollTop + element.clientHeight >= element.scrollHeight - 1;
-    
+
         if (atTop) {
             element.classList.add('no-fade-top');
             element.classList.remove('no-fade-bottom');
@@ -111,33 +125,37 @@ export const Chat: React.FC<props> = ({ playerName, socket, isConnected, current
             element.classList.remove('no-fade-top', 'no-fade-bottom');
         }
     };
-    
-    
+
+
     useEffect(() => {
         if (chatRef.current) {
             const element = chatRef.current;
-    
+
             handleScroll(); // Запускаем на старте чтобы сразу корректно применились классы
             element.addEventListener('scroll', handleScroll);
-            
+
             return () => {
                 element.removeEventListener('scroll', handleScroll);
             };
         }
     }, [messages]);
-    
-    // Запускаем, когда изменяются сообщения
 
+    // Запускаем, когда изменяются сообщения
+    const orderedMessages = window.innerWidth <= 768 ? [...messages].reverse() : messages;
     return (
         <div id="all_chat">
             <Container ref={chatRef} className={`chat-container scrollbar ${isScrollable ? 'scrollable' : ''}`}>
-                {
-                    messages.length === 0 
-                    ? <div style={{ textAlign: 'center', fontWeight: 500 }}>Нет сообщений, начните общение</div> 
-                    : messages.map((msg, index) => (
-                        <div key={index} style={msg.sender === userName?.fullName ? { alignSelf: 'flex-end', borderRadius: "16px 16px 0px 16px" } : {}} className="interlocutor">
+                {orderedMessages.length === 0
+                    ? <div style={{ textAlign: 'center', fontWeight: 500 }}>Нет сообщений, начните общение</div>
+                    : orderedMessages.map((msg, index) => (
+                        <div key={index}
+                            style={msg.sender === userName?.fullName ? { alignSelf: 'flex-end', borderRadius: "16px 16px 0px 16px" } : {}}
+                            className="interlocutor">
                             <Container style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={msg.sender === playerName ? { color: '#E38BAC' } : { color: '#60C2AA' }} className="player-text">{removeThirdWord(msg.sender)}</div>
+                                <div style={msg.sender === playerName ? { color: '#E38BAC' } : { color: '#60C2AA' }}
+                                    className="player-text">
+                                    {removeThirdWord(msg.sender)}
+                                </div>
                                 <div className="micro-text">{msg.timestamp}</div>
                             </Container>
                             <div className="special-text">{msg.message}</div>
@@ -157,7 +175,7 @@ export const Chat: React.FC<props> = ({ playerName, socket, isConnected, current
                         }
                     }}
                 />
-                <Button style={{ width: '48px' }} onClick={handleSendMessage}>
+                <Button className='send-button' style={{ width: '48px' }} onClick={handleSendMessage} disabled={isButtonDisabled}>
                     <img src={send} alt="" />
                 </Button>
             </Container>
