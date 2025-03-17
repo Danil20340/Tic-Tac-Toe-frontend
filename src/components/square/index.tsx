@@ -23,7 +23,7 @@ export const Square: React.FC<Props> = ({ value, onClick, isMakingMove, isWinnin
                     { backgroundColor: '#CFEDE6' } :
                 {}}
         >
-            {value === 'X' ? <img src={bigCross} alt="" /> : value === 'O' ? <img src={bigZero} alt="" /> : null}
+            {value === 'X' ? <img className="symbol" src={bigCross} alt="" /> : value === 'O' ? <img className="symbol" src={bigZero} alt="" /> : null}
         </button>
     );
 }

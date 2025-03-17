@@ -12,6 +12,7 @@ type Props = {
     style?: CSSProperties;
     errorMessage?: string;
     onFieldChange?: () => void;
+    required?: string;
 }
 
 export const AuthInput: React.FC<Props> = ({

@@ -9,14 +9,15 @@ type Props = {
     backgroundColor?: "#60C2AA" | "#F7F7F7";
     type?: "button" | "submit";
     onClick?: () => void;
+    className?: string;
 }
 
-export const Button: React.FC<Props> = ({ backgroundColor = "#60C2AA", disabled = false, children, color = "white", style, onClick, type = "button" }) => {
+export const Button: React.FC<Props> = ({ backgroundColor = "#60C2AA", disabled = false, children, color = "white", style, onClick, type = "button", className }) => {
 
     return (
         <button
             style={{ backgroundColor: backgroundColor, color: backgroundColor === "#60C2AA" ? color : "black", ...style }}
-            className="defaultButton"
+            className={`defaultButton ${className || ""}`}
             disabled={disabled}
             type={type}
             onClick={onClick}

@@ -3,9 +3,10 @@ import './index.css'
 type Props = {
     style?: CSSProperties;
     children: React.ReactNode;
+    className?: string;
 }
 
-export const Text: React.FC<Props> = ({ style, children }) => {
+export const Text: React.FC<Props> = ({ style, children,className }) => {
     return (
         <div style={{
             lineHeight: "24px",
@@ -14,6 +15,6 @@ export const Text: React.FC<Props> = ({ style, children }) => {
             color: '#373745',
             ...style
         }}
-            className='text'>{children}</div>
+        className={`text ${className || ""}`}>{children}</div>
     )
 }

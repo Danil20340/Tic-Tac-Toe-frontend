@@ -32,7 +32,7 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
     // Удаляем уведомление через 5 секунд
     setTimeout(() => {
       setNotifications((prev) => prev.filter((notification) => notification.id !== id));
-    }, 500000);
+    }, 5000);
   };
 
   const getIcon = (type: Notification["type"]) => {
