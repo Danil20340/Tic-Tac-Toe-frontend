@@ -1,1 +1,1 @@
-export const BASE_URL = process.env.NODE_ENV === 'production' ? 'http://158.160.140.68:80' : 'http://localhost:80'
+export const BASE_URL = process.env.NODE_ENV === 'production' ? 'http://84.201.168.251' : 'http://localhost:80'
