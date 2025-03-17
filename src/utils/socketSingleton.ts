@@ -4,7 +4,7 @@ let socket: Socket | null = null;
 
 export const getSocket = (): Socket => {
   if (!socket) {
-    socket = io("http://localhost:3000", {
+    socket = io("http://158.160.140.68:80", {
       transports: ["websocket"],
       autoConnect: false,
     });
