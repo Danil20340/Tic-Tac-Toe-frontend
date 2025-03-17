@@ -45,3 +45,8 @@ body.modal-open *:not(.modal, .modal *) {
     pointer-events: none;
     user-select: none;
 }
+@media (max-width: 768px) {
+    .modal__content {
+        margin: 0 12px;
+    }
+}

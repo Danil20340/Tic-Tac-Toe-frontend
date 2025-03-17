@@ -98,3 +98,19 @@
     mask-image: none;
     -webkit-mask-image: none;
 }
+@media (max-width: 768px) {
+    #all_chat {
+        align-self: center;
+    }
+    .chat-container {
+        mask-image: none!important;
+        -webkit-mask-image: none!important;
+    }
+    .send-button{
+        min-width: 48px;
+        min-height: 48px;
+    }
+    #all_chat {
+        flex-direction: column-reverse;
+    }
+}

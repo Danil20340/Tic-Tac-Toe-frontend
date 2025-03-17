@@ -23,4 +23,18 @@
         width: 150px;
         height: 150px;
     }
+    .symbol{
+        width: 135px;
+        height: 140px;
+    }
+}
+@media (max-width: 768px) {
+    .square{
+        width: 119px;
+        height: 119px;
+    }
+    .symbol{
+        width: 79px;
+        height: 79px;
+    }
 }

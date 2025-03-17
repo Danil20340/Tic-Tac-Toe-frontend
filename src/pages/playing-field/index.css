@@ -31,16 +31,41 @@
     gap: 40px;
 
 }
-.board{
+
+.board {
     width: 663px;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
     gap: 4px;
 }
-
+/* Мобильная адаптация */
+.mobile-field {
+    display: none;
+}
 @media (max-width: 1550px) {
-    .board{
+    .board {
         width: 458px;
+    }
+}
+
+@media (max-width: 768px) {
+    .desktop-field {
+        display: none;
+    }
+    .mobile-field {
+        display: flex;
+    }
+    .board {
+        width: 366px;
+    }
+    .common {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 40px;
+        padding: 24px 12px;
+    }
+     .mobile-field {
+        display: flex;
     }
 }

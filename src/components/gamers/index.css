@@ -11,8 +11,16 @@
     box-sizing: border-box;
     box-shadow: 0 4px 20px rgba(44, 57, 121, 0.09);
     border-radius: 20px;
+    transition: max-height 0.3s ease-in-out;
+}
+#players.collapsed {
+    max-height: 56px;
+    overflow: hidden;
 }
 
+#players.expanded {
+    max-height: 500px; /* Достаточно для списка */
+}
 .micro-text {
     font-weight: 400;
     font-size: 14px;
@@ -32,4 +40,70 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+}
+.gamersHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+.playersList {
+    overflow: hidden;
+    transition: max-height 0.9s ease-in-out;
+}
+
+.playersList.closed {
+    max-height: 0;
+    pointer-events: none;
+}
+
+.playersList.open {
+    max-height: 500px; /* Достаточно для списка */
+    opacity: 1;
+}
+.gamersHeader:active,
+.gamersHeader img:active,
+.gamersHeader:focus,
+.gamersHeader img:focus {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 1550px) {
+    .gamerName {
+        font-size: 16px;
+    }
+}
+@media (max-width: 768px) {
+    .gamerName {
+        font-size: 14px;
+        padding: 0;
+        line-height: 20px;
+    }
+    .micro-text {
+        padding-left: 32px;
+    }
+    #players{
+        max-width: 366px;
+        padding: 16px;
+        gap: 20px;
+    }
+    .gamersText{
+        font-size: 16px!important;
+        line-height: 24px!important;
+    }
+    .micro-text {
+        font-weight: 400;
+        font-size: 12px;
+        padding-left: 36px;
+        line-height: 16px;
+        letter-spacing: 0.25px;
+        color: #898993;
+    }
+    .gamerIcon{
+        width: 22px!important;
+    }
+    .gamersHeader {
+        cursor: pointer;
+    }
 }

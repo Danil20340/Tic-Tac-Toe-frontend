@@ -78,15 +78,31 @@ export const PlayingField = () => {
   return (
     <>
       <EndGameModal />
-      <Container className='common'>
-        <Gamers player1={data.player1} player2={data.player2} />
-        <Container style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', gap: '40px', backgroundColor: '#f6f6f6', maxWidth: '663px' }}>
-          <Timer createTime={(gameData?.status === 'FINISHED' || gameData?.status === 'DRAW') ? null : data.createTime} />
-          <Board isMakingMove={data.playerSymbol !== gameData?.nowMove || (gameData?.status === 'FINISHED' || gameData?.status === 'DRAW')} nowMove={gameData?.nowMove} board={gameData?.board ?? []} click={handleClick} winningPattern={gameData?.winningPattern ?? []} />
-          <Step nowMove={gameData?.nowMove} player={nowMovePlayer} />
+      <>
+        {/* Десктопная версия */}
+        <Container className='common desktop-field'>
+          <Gamers player1={data.player1} player2={data.player2} />
+          <Container style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', gap: '40px', backgroundColor: '#f6f6f6', maxWidth: '663px' }}>
+            <Timer createTime={(gameData?.status === 'FINISHED' || gameData?.status === 'DRAW') ? null : data.createTime} />
+            <Board isMakingMove={data.playerSymbol !== gameData?.nowMove || (gameData?.status === 'FINISHED' || gameData?.status === 'DRAW')} nowMove={gameData?.nowMove} board={gameData?.board ?? []} click={handleClick} winningPattern={gameData?.winningPattern ?? []} />
+            <Step nowMove={gameData?.nowMove} player={nowMovePlayer} />
+          </Container>
+          <Chat playerName={data.player2.fullName} currentGameID={gameData.id} socket={socket} isConnected={isConnected} />
         </Container>
-        <Chat playerName={data.player2.fullName} currentGameID={gameData.id} socket={socket} isConnected={isConnected} />
-      </Container>
+      </>
+      <>
+        {/* Мобильная версия */}
+        <Container className='common mobile-field'>
+          <Gamers player1={data.player1} player2={data.player2} />
+          <Container style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', gap: '40px', backgroundColor: '#f6f6f6', maxWidth: '663px' }}>
+            <Timer createTime={(gameData?.status === 'FINISHED' || gameData?.status === 'DRAW') ? null : data.createTime} />
+            <Step nowMove={gameData?.nowMove} player={nowMovePlayer} />
+            <Board isMakingMove={data.playerSymbol !== gameData?.nowMove || (gameData?.status === 'FINISHED' || gameData?.status === 'DRAW')} nowMove={gameData?.nowMove} board={gameData?.board ?? []} click={handleClick} winningPattern={gameData?.winningPattern ?? []} />
+          </Container>
+          <Chat playerName={data.player2.fullName} currentGameID={gameData.id} socket={socket} isConnected={isConnected} />
+        </Container>
+      </>
     </>
+
   );
 };
