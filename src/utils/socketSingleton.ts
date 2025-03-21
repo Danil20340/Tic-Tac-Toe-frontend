@@ -4,7 +4,7 @@ let socket: Socket | null = null;
 
 export const getSocket = (): Socket => {
   if (!socket) {
-    socket = io("http://84.201.168.251:80", {
+    socket = io('https://develop-projects.online', {
       transports: ["websocket"],
       autoConnect: false,
     });
