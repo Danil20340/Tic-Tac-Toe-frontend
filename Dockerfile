@@ -18,4 +18,8 @@ COPY --from=build /usr/src/app/build /usr/share/nginx/html
 # Копируем конфиг Nginx
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
+# Копируем SSL-сертификаты
+COPY certs/certificate.crt /etc/nginx/ssl/certificate.crt
+COPY certs/certificate.key /etc/nginx/ssl/certificate.key
+
 CMD ["nginx", "-g", "daemon off;"]
