@@ -1,1 +1,1 @@
-export const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://develop-projects.online' : 'http://localhost:80'
+export const BASE_URL = process.env.NODE_ENV === 'production' ? 'http://localhost:80' : 'http://localhost:80'
