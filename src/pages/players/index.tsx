@@ -78,7 +78,7 @@ export const Players = () => {
                       <img src={woman} alt="" />
                     </Cell>
                   ) : (
-                    <Cell style={{ width: '46px' }}>
+                    <Cell style={{ minWidth: '46px' }}>
                       <img src={man} alt="" />
                     </Cell>
                   )}
